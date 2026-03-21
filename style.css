@@ -365,12 +365,12 @@ section { padding: 80px 0; }
 =========================== */
 #experience { background: var(--light); }
 
-.timeline { position: relative; padding-left: 2rem; }
+.timeline { position: relative; }
 
 .timeline::before {
   content: '';
   position: absolute;
-  left: 7px; top: 8px; bottom: 8px;
+  left: 6px; top: 8px; bottom: 8px;
   width: 2px;
   background: linear-gradient(to bottom, var(--accent), rgba(74,125,232,0.1));
   border-radius: 2px;
@@ -378,12 +378,13 @@ section { padding: 80px 0; }
 
 .timeline-item {
   position: relative;
+  padding-left: 2rem;
   margin-bottom: 2rem;
 }
 
 .timeline-dot {
   position: absolute;
-  left: -2rem;
+  left: 0;
   top: 6px;
   width: 14px; height: 14px;
   border-radius: 50%;
