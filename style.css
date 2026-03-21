@@ -260,6 +260,18 @@ nav {
 
 .btn-large { padding: 0.9rem 2.5rem; font-size: 1rem; border-radius: 10px; }
 
+.btn-whatsapp {
+  background: #25d366;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-whatsapp:hover { background: #1ebe5d; transform: translateY(-1px); }
+
+.contact-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
 /* ===========================
    SECTIONS
 =========================== */
