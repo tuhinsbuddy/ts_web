@@ -364,6 +364,9 @@ section { padding: 80px 0; }
    EXPERIENCE / TIMELINE
 =========================== */
 #experience { background: var(--light); }
+#experience .timeline { margin-top: 2rem; }
+#projects .projects-grid { margin-top: 2rem; }
+#opensource .projects-grid { margin-top: 2rem; }
 
 .timeline { position: relative; }
 
@@ -374,6 +377,26 @@ section { padding: 80px 0; }
   width: 2px;
   background: linear-gradient(to bottom, var(--accent), rgba(74,125,232,0.1));
   border-radius: 2px;
+}
+
+.timeline-start {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateX(calc(7px - 50%));
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 20px;
+  padding: 0.15rem 0.65rem;
+  background: rgba(74,125,232,0.06);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 2.5rem;
 }
 
 .timeline-item {
