@@ -350,6 +350,22 @@ section { padding: 80px 0; }
 #projects { background: var(--light); }
 #opensource { background: var(--white); }
 
+.oss-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.oss-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border-radius: 20px;
+  padding: 0.2rem 0.65rem;
+}
+
 .projects-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -361,7 +377,7 @@ section { padding: 80px 0; }
   padding: 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 1rem;
   min-height: 200px;
   overflow: hidden;
