@@ -209,12 +209,12 @@ nav {
   line-height: 1;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 5px;
 }
 
 .stat-plus {
   font-size: 1.25rem;
-  color: var(--accent);
+  color: #7dd3fc;
 }
 
 .stat-label {
