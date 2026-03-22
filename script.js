@@ -1,10 +1,8 @@
 // ── Analytics Dashboard ──────────────────────────────────────────
-// 1. Sign up free at goatcounter.com
-// 2. Replace GOATCOUNTER_CODE below with your site code
-// 3. In index.html <head>, also replace GOATCOUNTER_CODE in the script src
-// 4. In GoatCounter settings → enable "Allow anyone to see my stats" for
-//    the public counter API to work
-const GC_CODE = 'GOATCOUNTER_CODE';
+// GoatCounter site: https://tuhinsamui.goatcounter.com
+// To activate public counter: GoatCounter → Settings → Privacy
+// → enable "Allow anyone to see my stats"
+const GC_CODE = 'tuhinsamui';
 
 const ARTICLES = [
   { id: 'future-ios',    event: 'insight-future-ios'    },
@@ -35,7 +33,7 @@ function animateCount(el, target) {
 }
 
 async function loadAnalytics() {
-  if (GC_CODE === 'GOATCOUNTER_CODE') return; // not configured yet
+  // configured — proceeding
 
   // Hide setup banner once configured
   const banner = document.getElementById('analytics-banner');
