@@ -129,6 +129,7 @@ nav {
 
 .hero-social {
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -149,6 +150,14 @@ nav {
 }
 
 .hero-social svg { width: 17px; height: 17px; }
+
+.hero-social-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 1px;
+  margin: 0 4px;
+}
 
 /* Hero Photo */
 .hero-photo {
