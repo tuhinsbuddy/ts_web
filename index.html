@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tuhin Samui — Senior iOS Engineer</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- GoatCounter Analytics -->
+  <script data-goatcounter="https://tuhinsamui.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -342,28 +345,28 @@
       <h2 class="section-title">My Insights</h2>
       <p class="section-subtitle-light">Latest Articles &amp; Talks</p>
       <div class="insights-grid">
-        <div class="insight-card">
+        <div class="insight-card" data-goatcounter-click="insight-future-ios" data-goatcounter-title="Future of iOS">
           <div class="insight-body">
             <h3>The Future of iOS Development</h3>
             <p>Exploring trends and innovations in the iOS ecosystem — SwiftUI, Swift Concurrency, and modular architecture at scale.</p>
           </div>
           <div class="insight-wave"></div>
         </div>
-        <div class="insight-card">
+        <div class="insight-card" data-goatcounter-click="insight-leading-teams" data-goatcounter-title="Leading Mobile Teams">
           <div class="insight-body">
             <h3>Leading High-Performance Mobile Teams</h3>
             <p>Strategies for effective engineering leadership — from CI/CD automation to async remote collaboration.</p>
           </div>
           <div class="insight-wave"></div>
         </div>
-        <div class="insight-card">
+        <div class="insight-card" data-goatcounter-click="insight-modular-arch" data-goatcounter-title="Modular Architecture Fintech">
           <div class="insight-body">
             <h3>Modular Architecture in Fintech</h3>
             <p>How we migrated a monolithic iOS app to a fully modular VIPER architecture serving millions of users.</p>
           </div>
           <div class="insight-wave"></div>
         </div>
-        <div class="insight-card">
+        <div class="insight-card" data-goatcounter-click="insight-ai-engineering" data-goatcounter-title="AI-Augmented Engineering">
           <div class="insight-body">
             <h3>AI-Augmented Engineering</h3>
             <p>How tools like Claude Code and Cursor are changing the way iOS engineers write, review, and ship code.</p>
@@ -371,6 +374,102 @@
           <div class="insight-wave"></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ANALYTICS DASHBOARD -->
+  <section id="analytics">
+    <div class="analytics-inner">
+
+      <div class="analytics-header">
+        <div>
+          <h2 class="analytics-title">Site Analytics</h2>
+          <p class="analytics-sub">Live visitor insights · Powered by GoatCounter</p>
+        </div>
+        <a href="https://tuhinsamui.goatcounter.com" target="_blank" rel="noopener" class="btn btn-outline-light analytics-dashboard-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Private Dashboard
+        </a>
+      </div>
+
+      <!-- Setup banner — hidden once GC_CODE is configured -->
+      <div class="analytics-setup-banner" id="analytics-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Enable public stats in GoatCounter → Settings → Privacy → "Allow anyone to see my stats" to activate the live counter.</span>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="analytics-stats">
+        <div class="analytics-card">
+          <div class="analytics-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <span class="analytics-num" id="stat-total">—</span>
+          <span class="analytics-label">Total Visits</span>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <span class="analytics-num" id="stat-articles">4</span>
+          <span class="analytics-label">Articles Tracked</span>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="analytics-num" id="stat-updated">—</span>
+          <span class="analytics-label">Last Updated</span>
+        </div>
+        <div class="analytics-card analytics-card--accent">
+          <div class="analytics-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><polyline points="18 9 12 15 8 11 3 16"/></svg>
+          </div>
+          <span class="analytics-num">↗</span>
+          <span class="analytics-label">Full Trends in Dashboard</span>
+        </div>
+      </div>
+
+      <!-- Article interest bars -->
+      <div class="analytics-interests">
+        <p class="analytics-section-label">Article Interest</p>
+        <div class="interest-list">
+
+          <div class="interest-row">
+            <span class="interest-label">The Future of iOS Development</span>
+            <div class="interest-track">
+              <div class="interest-fill" id="bar-future-ios"></div>
+            </div>
+            <span class="interest-count" id="count-future-ios">—</span>
+          </div>
+
+          <div class="interest-row">
+            <span class="interest-label">Modular Architecture in Fintech</span>
+            <div class="interest-track">
+              <div class="interest-fill" id="bar-modular-arch"></div>
+            </div>
+            <span class="interest-count" id="count-modular-arch">—</span>
+          </div>
+
+          <div class="interest-row">
+            <span class="interest-label">Leading High-Performance Mobile Teams</span>
+            <div class="interest-track">
+              <div class="interest-fill" id="bar-leading-teams"></div>
+            </div>
+            <span class="interest-count" id="count-leading-teams">—</span>
+          </div>
+
+          <div class="interest-row">
+            <span class="interest-label">AI-Augmented Engineering</span>
+            <div class="interest-track">
+              <div class="interest-fill" id="bar-ai-engineering"></div>
+            </div>
+            <span class="interest-count" id="count-ai-engineering">—</span>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </section>
 
