@@ -241,7 +241,9 @@ nav {
    BUTTONS
 =========================== */
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.7rem 1.6rem;
   border-radius: 8px;
   font-size: 0.9rem;
