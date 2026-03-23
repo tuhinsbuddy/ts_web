@@ -284,6 +284,71 @@ nav {
 .contact-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
 /* ===========================
+   HERO EMAIL
+=========================== */
+.hero-email {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.2s;
+}
+.hero-email:hover { color: #fff; }
+
+/* ===========================
+   SKILLS
+=========================== */
+#skills { background: var(--light); }
+
+.skills-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.skills-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skills-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  min-width: 90px;
+  padding-top: 0.4rem;
+  flex-shrink: 0;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.skill-tag {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.skill-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ===========================
    SECTIONS
 =========================== */
 section { padding: 80px 0; }
@@ -619,6 +684,7 @@ section { padding: 80px 0; }
 }
 
 .insight-card {
+  display: block;
   background: var(--light);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -626,6 +692,7 @@ section { padding: 80px 0; }
   position: relative;
   min-height: 160px;
   transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .insight-card:hover {
@@ -663,9 +730,15 @@ section { padding: 80px 0; }
 /* ===========================
    CONTACT
 =========================== */
-#contact { background: var(--light); }
+#contact {
+  background: var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
 
-.contact-inner { text-align: center; }
+.contact-inner { text-align: center; width: 100%; }
 
 .contact-sub {
   font-size: 1rem;
@@ -689,6 +762,11 @@ footer {
   border-top: 1px solid var(--border);
   padding: 2.5rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
 }
 
 .footer-social {
@@ -731,7 +809,7 @@ footer {
   .hero-photo { flex: none; width: 100%; max-width: 320px; height: 300px; }
   .hero-sub { margin-left: auto; margin-right: auto; }
 
-  .stats-bar { flex-direction: column; gap: 1.5rem; }
+.stats-bar { flex-direction: column; gap: 1.5rem; }
   .stat-item { padding: 0; }
   .stat-divider { width: 60px; height: 1px; }
 

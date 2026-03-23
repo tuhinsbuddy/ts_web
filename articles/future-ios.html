@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Future of iOS Development — Tuhin Samui</title>
+  <link rel="stylesheet" href="../style.css" />
+  <script data-goatcounter="https://tuhinsamui.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+  <style>
+    /* ── Article Layout ─────────────────────────────────── */
+    body { background: var(--white); }
+
+    .article-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      padding: 80px 6% 20px;
+      color: #fff;
+    }
+
+    .article-hero-inner {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .article-back:hover { color: #fff; }
+
+    .article-tag {
+      display: inline-block;
+      background: rgba(74,125,232,0.25);
+      color: #93c5fd;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      margin-top: 0.5rem;
+      margin-bottom: 1.25rem;
+      display: inline-block;
+    }
+
+    .article-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .article-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.83rem;
+      color: rgba(255,255,255,0.45);
+      flex-wrap: wrap;
+      margin-bottom: 0;
+    }
+
+    .article-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .article-meta span + span::before {
+      content: '·';
+      margin-right: 0.1rem;
+      opacity: 0.4;
+    }
+
+    /* ── Article Body ───────────────────────────────────── */
+    .article-body {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 60px 6% 100px;
+    }
+
+    .article-body h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.5rem 0 0.75rem;
+    }
+
+    .article-body h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2rem 0 0.5rem;
+    }
+
+    .article-body p {
+      color: #374151;
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+      font-size: 1rem;
+    }
+
+    .article-body ul, .article-body ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: #374151;
+      line-height: 1.8;
+    }
+
+    .article-body li { margin-bottom: 0.4rem; }
+
+    .article-body strong { color: var(--text); }
+
+    .article-body a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .article-callout {
+      background: #eff6ff;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+      color: #1e40af;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .article-callout strong { color: #1e3a8a; }
+
+    pre {
+      background: #0f172a;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+
+    p code, li code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── Author card ───────────────────────────────────── */
+    .author-card {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .author-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .author-info p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .author-info strong {
+      font-size: 0.95rem;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="nav-logo">Tuhin Samui</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#opensource">Open Source</a></li>
+      <li><a href="../index.html#insights">Insights</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+  </nav>
+
+  <!-- ARTICLE HERO -->
+  <div class="article-hero">
+    <div class="article-hero-inner">
+      <a href="../index.html#insights" class="article-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </a>
+      <h1 class="article-title">The Future of iOS Development</h1>
+      <p class="article-subtitle">SwiftUI is no longer experimental. Swift Concurrency is production-ready. And the way we build iOS apps is changing faster than ever — here's what that means for engineers.</p>
+      <span class="article-tag">iOS · SwiftUI · Architecture</span>
+      <div class="article-meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          March 2025
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          8 min read
+        </span>
+        <span>By Tuhin Samui</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY -->
+  <article class="article-body">
+
+    <p>
+      I've been building iOS apps for nearly a decade. I've seen the transition from Objective-C to Swift, from MVC to MVVM and VIPER, from storyboards to programmatic UI and now to SwiftUI. Each shift was significant. But what's happening right now feels different — more fundamental.
+    </p>
+
+    <p>
+      The next generation of iOS development isn't just about new APIs. It's about a new way of thinking about concurrency, architecture, and the developer experience itself. Here are the five trends I believe will define iOS engineering over the next few years.
+    </p>
+
+    <h2>1. SwiftUI Is Finally the Default</h2>
+
+    <p>
+      For years, SwiftUI felt like a preview of the future — impressive in demos, frustrating in production. Missing components, layout bugs, and poor debugging tools kept most teams on UIKit for anything serious.
+    </p>
+
+    <p>
+      That era is over. With iOS 17 and 18, SwiftUI has closed most of the feature gap. <code>ScrollView</code> improvements, the new <code>Observable</code> macro, better navigation APIs (<code>NavigationStack</code>, <code>NavigationSplitView</code>) — these aren't incremental updates. They're the platform committing to SwiftUI as the primary path.
+    </p>
+
+    <div class="article-callout">
+      <strong>My take:</strong> New features from Apple — Lock Screen widgets, interactive widgets, StandBy mode, Dynamic Island — ship first (and sometimes exclusively) in SwiftUI. If your team is still defaulting to UIKit for new screens, you're accumulating technical debt, not avoiding it.
+    </div>
+
+    <p>
+      The practical implication for teams: start a SwiftUI migration plan now. Not a big-bang rewrite — a gradual, screen-by-screen replacement using <code>UIHostingController</code> and <code>UIViewRepresentable</code> as bridges.
+    </p>
+
+    <h2>2. Swift Concurrency Changes Everything</h2>
+
+    <p>
+      <code>async/await</code> arrived in Swift 5.5. Actors, structured concurrency, and <code>AsyncStream</code> followed. Three years in, the ecosystem has caught up — and the mental model shift is profound.
+    </p>
+
+    <p>
+      The old world: GCD dispatch queues, completion handlers, callback pyramids, and manual thread safety. The new world: <code>async/await</code> that reads like synchronous code, <code>actor</code> isolation that makes data races a compile-time error, and <code>Task</code> groups that express concurrency declaratively.
+    </p>
+
+<pre><code>// Old world
+func loadUser(id: String, completion: @escaping (Result&lt;User, Error&gt;) -&gt; Void) {
+    networkService.fetch("/users/\(id)") { result in
+        DispatchQueue.main.async {
+            completion(result)
+        }
+    }
+}
+
+// New world
+func loadUser(id: String) async throws -&gt; User {
+    try await networkService.fetch("/users/\(id)")
+}</code></pre>
+
+    <p>
+      Beyond syntax, the real win is <strong>structured concurrency</strong>. Child tasks are automatically cancelled when their parent is cancelled. Scoped lifetimes prevent the "fire and forget" bugs that caused subtle data races and memory leaks for years.
+    </p>
+
+    <h3>The Actor Model in Practice</h3>
+
+    <p>
+      Actors deserve their own section. An <code>actor</code> serialises access to its mutable state, eliminating an entire class of race conditions at the type level — not at runtime, not in tests, but verified by the compiler.
+    </p>
+
+<pre><code>actor ImageCache {
+    private var cache: [URL: UIImage] = [:]
+
+    func image(for url: URL) -&gt; UIImage? {
+        cache[url]
+    }
+
+    func store(_ image: UIImage, for url: URL) {
+        cache[url] = image
+    }
+}
+</code></pre>
+
+    <p>
+      <code>@MainActor</code> is equally powerful — annotate a class or function to guarantee it always runs on the main thread, removing the need for <code>DispatchQueue.main.async</code> boilerplate.
+    </p>
+
+    <h2>3. Modular Architecture Is No Longer Optional</h2>
+
+    <p>
+      When I joined my first fintech team, our iOS app was a single module. 400k+ lines of Swift. Clean build time: 14 minutes. Incremental: still 3–4 minutes. Onboarding a new engineer was a two-week process just to understand the dependency graph.
+    </p>
+
+    <p>
+      We migrated to a modular architecture over 18 months — splitting into 40+ Swift Package Manager modules organised around features and layers. Clean build: 90 seconds. Incremental: under 15 seconds. Feature teams could own their module in isolation, write unit tests without bootstrapping the whole app, and ship independently.
+    </p>
+
+    <p>
+      The tools for this are excellent now. Swift Package Manager is mature, Xcode's build system handles SPM dependencies well, and libraries like <strong>The Composable Architecture (TCA)</strong> and <strong>Needle</strong> (for dependency injection) are battle-tested at scale.
+    </p>
+
+    <div class="article-callout">
+      <strong>Key insight:</strong> Modularisation is not about code organisation — it's about team scalability. The faster your engineers can iterate in isolation, the faster your product moves. A monolithic app is a coordination tax on every engineer, every day.
+    </div>
+
+    <h2>4. AI-Assisted Development Is a Multiplier, Not a Replacement</h2>
+
+    <p>
+      I use AI tools daily — Claude Code, GitHub Copilot, and Cursor. My productivity on boilerplate-heavy tasks (writing tests, generating model types from JSON, wiring up new screens) has roughly doubled.
+    </p>
+
+    <p>
+      But the picture is more nuanced than "AI writes code, humans review it." The engineers who get the most leverage are those who can precisely specify what they want, catch subtle errors in generated code, and know when AI suggestions are confidently wrong.
+    </p>
+
+    <p>
+      On iOS specifically, AI tools sometimes hallucinate deprecated APIs or miss platform-specific constraints. A suggestion using <code>UIApplication.shared.keyWindow</code> (deprecated in iOS 15) or ignoring <code>@MainActor</code> isolation will compile but break at runtime. The baseline of iOS platform knowledge still matters — it's the lens you use to evaluate what gets generated.
+    </p>
+
+    <h2>5. Privacy as a First-Class Engineering Concern</h2>
+
+    <p>
+      Apple's privacy trajectory is consistent and accelerating. App Tracking Transparency, Privacy Nutrition Labels, required purpose strings, and now the Privacy Manifest requirement for SDKs. Each release tightens the screws.
+    </p>
+
+    <p>
+      Engineers who treat privacy as a PM or legal concern — and not an engineering one — are creating risk. Accessing the photo library without using the new limited-access APIs, using third-party SDKs that silently collect fingerprinting signals, or skipping required Privacy Manifest declarations will get apps rejected or removed.
+    </p>
+
+    <p>
+      The positive flip: users trust iOS apps more than any other platform. That trust is a competitive moat. Building privacy-respecting features well — on-device processing, differential privacy, minimal data collection — is increasingly a product differentiator, not just compliance.
+    </p>
+
+    <h2>What This Means for iOS Engineers</h2>
+
+    <p>
+      The iOS engineer of 2025 needs a broader toolkit than ever: deep UIKit/SwiftUI knowledge, fluency in Swift Concurrency, architecture instincts that scale to multi-team products, and an understanding of the privacy landscape.
+    </p>
+
+    <p>
+      The good news: the platform is more productive than it's ever been. The ceiling for what a small, skilled team can ship — and maintain — has never been higher. The engineers who invest in understanding these shifts now will have a significant advantage over those who are still writing completion handler callbacks in 2026.
+    </p>
+
+    <hr class="article-divider" />
+
+    <div class="author-card">
+      <div class="author-avatar">TS</div>
+      <div class="author-info">
+        <strong>Tuhin Samui</strong>
+        <p>Senior iOS Engineer &amp; Engineering Leader. 9.5+ years building fintech mobile products at scale. Currently consulting and writing about iOS architecture, Swift, and engineering leadership.</p>
+      </div>
+    </div>
+
+  </article>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/in/tuhinsamui/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://stackoverflow.com/users/4977661/oncompletion" target="_blank" rel="noopener" aria-label="Stack Overflow">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.986 21.865v-6.404h2.134V24H1.844v-8.539h2.13v6.404h15.012zM6.111 19.731H16.85v-2.137H6.111v2.137zm.259-4.852l10.48 2.189.451-2.07-10.478-2.187-.453 2.068zm1.359-5.056l9.705 4.53.903-1.95-9.706-4.53-.902 1.95zm2.715-4.785l8.217 6.855 1.359-1.62-8.216-6.853-1.36 1.618zM15.751 0l-1.746 1.294 6.405 8.604 1.746-1.294L15.751 0z"/></svg>
+      </a>
+      <a href="https://github.com/tuhinsbuddy" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.745 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      </a>
+      <a href="https://leetcode.com/u/ripperTMS/" target="_blank" rel="noopener" aria-label="LeetCode">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+      </a>
+    </div>
+    <p class="footer-copy">© 2026 Tuhin Samui. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+  </script>
+
+</body>
+</html>
