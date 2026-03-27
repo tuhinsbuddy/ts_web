@@ -231,12 +231,15 @@
     /* Output code */
     .jc-output {
       flex: 1; min-height: 0;
-      overflow: auto;
+      overflow: hidden;
       padding: 1rem;
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
       font-size: .82rem; line-height: 1.65;
-      white-space: pre;
       color: #c8d8f8;
+    }
+    .jc-output.has-code {
+      overflow: auto;
+      white-space: pre;
     }
     .jc-output::-webkit-scrollbar { width: 4px; height: 4px; }
     .jc-output::-webkit-scrollbar-track { background: transparent; }
@@ -573,6 +576,7 @@ function run() {
     inputStatus.className = 'jc-panel-status';
     outputStatus.textContent = '—';
     outputStatus.className = 'jc-panel-status';
+    swiftOutput.classList.remove('has-code');
     swiftOutput.innerHTML = `<div class="jc-empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/>
@@ -602,6 +606,7 @@ function run() {
     outputStatus.textContent = count + ' struct' + (count !== 1 ? 's' : '') + ', ' + propCount + ' propert' + (propCount !== 1 ? 'ies' : 'y');
     outputStatus.className = 'jc-panel-status ok';
 
+    swiftOutput.classList.add('has-code');
     swiftOutput.innerHTML = highlight(lastSwift);
     copyBtn.disabled = false;
     downloadBtn.disabled = false;
@@ -615,6 +620,7 @@ function run() {
     lastSwift = '';
     copyBtn.disabled = true;
     downloadBtn.disabled = true;
+    swiftOutput.classList.remove('has-code');
     swiftOutput.innerHTML = `<div class="jc-empty"><p style="color:rgba(220,80,80,1); font-size:1rem; font-weight:600;">Please provide correct JSON input.</p></div>`;
   }
 }
