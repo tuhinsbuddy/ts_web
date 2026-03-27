@@ -8,7 +8,7 @@
   <script data-goatcounter="https://tuhinsamui.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <link rel="stylesheet" href="/_astro/future-ios.C8dQKi5L.css">
   <style>
-    /* ── No-scroll full-height layout ───────────────── */
+    /* ── Layout ───────────────────────────────────────── */
     html, body { height: 100%; overflow: hidden; }
     body { display: flex; flex-direction: column; }
     footer {
@@ -17,161 +17,312 @@
       min-height: unset !important;
     }
 
-    /* ── Speedtest page ─────────────────────────────── */
+    /* ── Page ─────────────────────────────────────────── */
     .st-page {
-      min-height: calc(100vh - 64px);
-      background: #090d1a;
-      background-image:
-        radial-gradient(ellipse 55% 65% at 10% 65%, rgba(0, 120, 220, 0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 55% 65% at 90% 65%, rgba(160, 0, 220, 0.14) 0%, transparent 70%);
       flex: 1;
       min-height: 0;
-      padding: 64px 4% 80px;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 64px 5% 80px;
+      background: #070e20;
     }
+
+    /* Radial glow in center */
+    .st-page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(14, 30, 80, 0.9) 0%, transparent 70%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, #070e20 40%, #060c1a 100%);
+      pointer-events: none;
+    }
+
+    /* Subtle grid lines */
+    .st-page::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(80, 130, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80, 130, 255, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    /* ── Title ────────────────────────────────────────── */
     .st-title {
-      font-size: clamp(1.4rem, 3vw, 2rem);
-      font-weight: 800;
-      color: #fff;
+      font-size: clamp(.95rem, 2.2vw, 1.3rem);
+      font-weight: 700;
+      color: #7aaae8;
       text-align: center;
-      margin-bottom: 1rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Main grid ────────────────────────────────────── */
+    .st-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 860px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Top row: download + upload as siblings → equal height */
+    .st-top-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .st-top-row .st-card { flex: 1; }
+
+    /* Bottom section */
+    .st-bottom {
+      display: flex;
+      gap: 10px;
+    }
+
+    .st-bottom-left {
+      flex: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .st-row {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+    }
+
+    /* ── Cards ────────────────────────────────────────── */
+    .st-card {
+      background: rgba(8, 18, 46, 0.82);
+      border: 1px solid rgba(70, 110, 200, 0.28);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      flex: 1;
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .st-card.active {
+      border-color: rgba(100, 160, 255, 0.65);
+      box-shadow: 0 0 24px rgba(70, 130, 255, 0.18), inset 0 0 40px rgba(70, 130, 255, 0.04);
+    }
+
+    .st-card.done {
+      border-color: rgba(70, 110, 200, 0.4);
+    }
+
+    /* Download / Upload: taller */
+    .st-card-lg {
+      padding: 1.4rem 1.6rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Progress bar ─────────────────────────────────── */
+    .st-progress {
+      height: 3px;
+      border-radius: 2px;
+      margin-top: .85rem;
+      background: rgba(70, 110, 200, 0.15);
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .st-card.active .st-progress,
+    .st-card.done .st-progress {
+      opacity: 1;
+    }
+
+    .st-progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #2a6dd5, #00d4ff 55%, #00e676);
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+      transition: width .25s ease-out;
+    }
+
+    .st-card.done .st-progress-bar {
+      background: linear-gradient(90deg, #2a6dd5, #00d4ff 55%, #00e676);
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+    }
+
+    /* ── Card content ─────────────────────────────────── */
+    .st-label {
+      display: block;
+      font-size: 1.44rem;
+      font-weight: 700;
+      color: #6890cc;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      margin-bottom: 1.2rem;
+    }
+
+    .st-val-row {
+      display: flex;
+      align-items: baseline;
+      gap: .5rem;
+    }
+
+    .st-num {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #d8e8ff;
+      line-height: 1;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       letter-spacing: -0.5px;
     }
 
-    /* ── Dashboard row ────────────────────────────── */
-    .st-dashboard {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      width: 100%;
-      max-width: 800px;
-      margin-bottom: .75rem;
+    .st-num.lg {
+      font-size: 3.8rem;
     }
 
-    /* ── Side panels ─────────────────────────────── */
-    .st-side {
-      flex: 0 0 120px;
+    .st-unit {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: rgba(180, 200, 245, 0.65);
+    }
+
+    /* ── Right panel: Loss + Server ───────────────────── */
+    .st-panel {
+      background: rgba(8, 18, 46, 0.82);
+      border: 1px solid rgba(70, 110, 200, 0.28);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      justify-content: space-around;
+      gap: 0;
     }
-    .st-side-panel {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+
+    .st-divider {
+      height: 1px;
+      background: rgba(70, 110, 200, 0.2);
+      margin: .8rem 0;
+    }
+
+    .st-server-name {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #c8d8f8;
+      margin-top: .3rem;
+    }
+
+    /* ── Button card ──────────────────────────────────── */
+    .st-btn-wrap {
+      position: relative;
       border-radius: 12px;
-      padding: .9rem 1rem;
-    }
-    .st-stat-label {
-      font-size: .6rem;
-      font-weight: 700;
-      color: rgba(255,255,255,.35);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      display: block;
-      margin-bottom: .3rem;
-    }
-    .st-stat-row {
-      display: flex;
-      align-items: baseline;
-      gap: .3rem;
-    }
-    .st-stat-val {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1;
-    }
-    .st-stat-unit {
-      font-size: .75rem;
-      color: rgba(255,255,255,.35);
-    }
-    .st-server-val {
-      font-size: .85rem;
-      font-weight: 600;
-      color: rgba(255,255,255,.65);
-      margin-top: .2rem;
+      overflow: hidden;
+      padding: 1px;              /* border thickness */
+      background: rgba(70, 110, 200, 0.35);  /* default border colour */
+      isolation: isolate;
     }
 
-    /* ── Gauge ───────────────────────────────────── */
-    .st-gauge-wrap { flex: 1; min-width: 0; }
-    #speedSvg { width: 100%; height: auto; display: block; overflow: visible; }
+    /* Traveling light — square element centered, spins around button */
+    @keyframes border-spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
 
-    /* ── Result cards ────────────────────────────── */
-    .st-cards {
-      display: flex;
-      gap: .75rem;
-      width: 100%;
-      max-width: 800px;
-      margin-bottom: 1rem;
+    .st-btn-wrap.running::before {
+      content: '';
+      position: absolute;
+      /* Square, 2× the longest side so corners always reach */
+      width: 250%;
+      aspect-ratio: 1 / 1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(0, 180, 255, 0.15) 40%,
+        rgba(0, 220, 255, 0.9)  50%,
+        rgba(180, 240, 255, 1)  52%,
+        rgba(0, 220, 255, 0.9)  54%,
+        rgba(0, 180, 255, 0.15) 60%,
+        transparent 70%,
+        transparent 100%
+      );
+      animation: border-spin 2s linear infinite;
+      z-index: 0;
     }
-    .st-card {
-      flex: 1;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: .9rem 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: .9rem;
-      transition: border-color .3s, background .3s;
-    }
-    .st-card.active { border-color: #00d4ff; background: rgba(0,212,255,.06); }
-    .st-card.done   { border-color: rgba(74,222,128,.5); background: rgba(74,222,128,.04); }
-    .st-card-icon { flex-shrink: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
-    .st-card-icon svg { width: 26px; height: 26px; }
-    .st-card-label {
-      font-size: .6rem;
-      font-weight: 700;
-      color: rgba(255,255,255,.4);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      display: block;
-      margin-bottom: .2rem;
-    }
-    .st-card-val { font-size: 1.25rem; font-weight: 800; color: #fff; }
-    .st-card-unit { font-size: .75rem; font-weight: 400; color: rgba(255,255,255,.4); }
 
-    /* ── Button ──────────────────────────────────── */
+    /* Inner fill — covers everything except the 1px gap */
+    .st-btn-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      background: rgba(8, 18, 50, 0.96);
+      border-radius: 11px;
+      z-index: 1;
+    }
+
     .st-btn {
-      background: linear-gradient(160deg, #1a3468 0%, #243d80 100%);
-      color: #fff;
-      border: 1px solid rgba(74,125,232,.5);
-      border-radius: 50px;
-      padding: .95rem 0;
+      display: block;
+      position: relative;
+      z-index: 2;
       width: 100%;
-      max-width: 300px;
-      font-size: 1rem;
+      background: transparent;
+      border: none;
+      border-radius: 11px;
+      color: #a8c0f0;
+      font-size: .95rem;
       font-weight: 800;
-      letter-spacing: .12em;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      padding: 1.25rem;
       cursor: pointer;
-      transition: all .2s;
-      box-shadow: 0 0 24px rgba(74,125,232,.2), inset 0 1px 0 rgba(255,255,255,.1);
+      transition: background .2s, color .2s;
     }
+
     .st-btn:hover:not(:disabled) {
-      background: linear-gradient(160deg, #214080 0%, #2e50a0 100%);
-      box-shadow: 0 0 36px rgba(74,125,232,.4), inset 0 1px 0 rgba(255,255,255,.15);
-      transform: translateY(-2px);
-    }
-    .st-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-    .st-footer { margin-top: .75rem; font-size: .72rem; color: rgba(255,255,255,.2); }
-
-    /* ── Needle ──────────────────────────────────── */
-    #needleGroup {
-      transform-box: view-box;
-      transform-origin: 220px 220px;
-      transition: transform .25s ease-out;
+      background: rgba(30, 55, 120, 0.5);
+      color: #d8e8ff;
     }
 
-    /* ── Mobile ──────────────────────────────────── */
-    @media (max-width: 620px) {
-      .st-side { display: none; }
+    .st-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
     }
-    @media (max-width: 480px) {
-      .st-cards { flex-direction: column; }
+
+    /* ── Footer note ──────────────────────────────────── */
+    .st-note {
+      margin-top: .9rem;
+      font-size: .68rem;
+      color: rgba(100, 130, 200, 0.35);
+      position: relative;
+      z-index: 1;
+      letter-spacing: .05em;
+    }
+
+    /* ── Mobile ───────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .st-layout { flex-direction: column; }
+      .st-num.lg { font-size: 2.8rem; }
+      .st-num { font-size: 2.4rem; }
       .st-page { padding: 64px 4% 60px; }
+    }
+
+    @media (max-width: 400px) {
+      .st-row { gap: 8px; }
+      .st-layout { gap: 8px; }
     }
   </style>
 </head>
@@ -205,151 +356,73 @@
 <main class="st-page">
   <h1 class="st-title">Internet Speed Test</h1>
 
-  <div class="st-dashboard">
+  <div class="st-layout">
 
-    <!-- Left panel: Ping & Jitter -->
-    <div class="st-side">
-      <div class="st-side-panel">
-        <span class="st-stat-label">Ping</span>
-        <div class="st-stat-row">
-          <span class="st-stat-val" id="stat-ping">—</span>
-          <span class="st-stat-unit">ms</span>
+    <!-- Row 1: Download + Upload (equal siblings = equal height) -->
+    <div class="st-top-row">
+      <div class="st-card st-card-lg" id="card-download">
+        <span class="st-label">Download</span>
+        <div class="st-val-row">
+          <span class="st-num lg" id="val-download">0</span>
+          <span class="st-unit">Mbps</span>
+        </div>
+        <div class="st-progress"><div class="st-progress-bar" id="progress-download"></div></div>
+      </div>
+      <div class="st-card st-card-lg" id="card-upload">
+        <span class="st-label">Upload</span>
+        <div class="st-val-row">
+          <span class="st-num lg" id="val-upload">0</span>
+          <span class="st-unit">Mbps</span>
+        </div>
+        <div class="st-progress"><div class="st-progress-bar" id="progress-upload"></div></div>
+      </div>
+    </div>
+
+    <!-- Row 2: Ping/Jitter/Button + Loss/Server -->
+    <div class="st-bottom">
+      <div class="st-bottom-left">
+        <div class="st-row">
+          <div class="st-card" id="card-ping">
+            <span class="st-label">Ping</span>
+            <div class="st-val-row">
+              <span class="st-num" id="val-ping">0</span>
+              <span class="st-unit">ms</span>
+            </div>
+          </div>
+          <div class="st-card" id="card-jitter">
+            <span class="st-label">Jitter</span>
+            <div class="st-val-row">
+              <span class="st-num" id="val-jitter">0</span>
+              <span class="st-unit">ms</span>
+            </div>
+          </div>
+        </div>
+        <div class="st-btn-wrap">
+          <button id="startBtn" class="st-btn">Start Speed Test</button>
+
         </div>
       </div>
-      <div class="st-side-panel">
-        <span class="st-stat-label">Jitter</span>
-        <div class="st-stat-row">
-          <span class="st-stat-val" id="stat-jitter">—</span>
-          <span class="st-stat-unit">ms</span>
+
+      <!-- Loss + Server -->
+      <div class="st-panel">
+        <div>
+          <span class="st-label">Loss</span>
+          <div class="st-val-row">
+            <span class="st-num" id="val-loss">0</span>
+            <span class="st-unit">%</span>
+          </div>
+        </div>
+        <div class="st-divider"></div>
+        <div>
+          <span class="st-label">Server</span>
+          <p class="st-server-name">Cloudflare</p>
         </div>
       </div>
     </div>
 
-    <!-- Center: Speedometer SVG -->
-    <div class="st-gauge-wrap">
-      <svg id="speedSvg" viewBox="0 0 440 225" xmlns="http://www.w3.org/2000/svg" overflow="visible" aria-hidden="true">
-        <defs>
-          <filter id="fBlue" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="6" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="fPink" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="6" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="fNeedle" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="2.5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <radialGradient id="hubGrad" cx="38%" cy="32%" r="65%">
-            <stop offset="0%" stop-color="#3a4f7a"/>
-            <stop offset="100%" stop-color="#080c18"/>
-          </radialGradient>
-          <linearGradient id="needleGrad" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#00e8ff"/>
-            <stop offset="100%" stop-color="#ffffff"/>
-          </linearGradient>
-        </defs>
+  </div><!-- /.st-layout -->
 
-        <!-- Dark background track -->
-        <path d="M 35,220 A 185,185 0 0,0 405,220" stroke="#0c1120" stroke-width="40" fill="none" stroke-linecap="round"/>
-
-        <!-- Blue arc glow (left half: 0–500 Mbps) -->
-        <path d="M 35,220 A 185,185 0 0,0 220,35" stroke="#00c8ff" stroke-width="30" fill="none" stroke-linecap="round" filter="url(#fBlue)" opacity="0.55"/>
-        <!-- Blue arc solid -->
-        <path d="M 35,220 A 185,185 0 0,0 220,35" stroke="#00d4ff" stroke-width="18" fill="none" stroke-linecap="round"/>
-
-        <!-- Pink arc glow (right half: 500–1000 Mbps) -->
-        <path d="M 220,35 A 185,185 0 0,0 405,220" stroke="#d040f0" stroke-width="30" fill="none" stroke-linecap="round" filter="url(#fPink)" opacity="0.55"/>
-        <!-- Pink arc solid -->
-        <path d="M 220,35 A 185,185 0 0,0 405,220" stroke="#c030e0" stroke-width="18" fill="none" stroke-linecap="round"/>
-
-        <!-- Tick marks & labels injected by JS -->
-        <g id="tickGroup"></g>
-
-        <!-- Needle — points UP by default (500 Mbps); JS rotates via CSS transform -->
-        <g id="needleGroup">
-          <polygon points="217,220 220,52 223,220" fill="url(#needleGrad)" filter="url(#fNeedle)"/>
-          <polygon points="219,220 220,234 221,220" fill="rgba(255,255,255,.35)"/>
-        </g>
-
-        <!-- Hub -->
-        <circle cx="220" cy="220" r="15" fill="url(#hubGrad)" stroke="#1c3060" stroke-width="2"/>
-        <circle cx="220" cy="220" r="6.5" fill="#00d4ff" opacity=".85"/>
-        <circle cx="216.5" cy="216.5" r="2.5" fill="rgba(255,255,255,.55)"/>
-
-        <!-- Center text: phase -->
-        <text id="gaugePhase" x="220" y="148" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="700"
-          font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" letter-spacing="3">SPEED TEST</text>
-        <!-- Center text: speed value -->
-        <text id="gaugeSpeed" x="220" y="183" text-anchor="middle" fill="#ffffff" font-size="44" font-weight="800"
-          font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" letter-spacing="-1">—</text>
-        <!-- Center text: unit -->
-        <text id="gaugeUnit" x="220" y="201" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="12"
-          font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">Mbps</text>
-      </svg>
-    </div>
-
-    <!-- Right panel: Loss & Server -->
-    <div class="st-side">
-      <div class="st-side-panel">
-        <span class="st-stat-label">Loss</span>
-        <div class="st-stat-row">
-          <span class="st-stat-val" id="stat-loss">0</span>
-          <span class="st-stat-unit">%</span>
-        </div>
-      </div>
-      <div class="st-side-panel">
-        <span class="st-stat-label">Server</span>
-        <p class="st-server-val">Cloudflare</p>
-      </div>
-    </div>
-
-  </div><!-- /.st-dashboard -->
-
-  <!-- Result cards -->
-  <div class="st-cards">
-    <div class="st-card" id="card-download">
-      <div class="st-card-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 3v13M6 11l6 6 6-6" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 20h18" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div>
-        <span class="st-card-label">Download</span>
-        <div class="st-card-val"><span id="val-download">—</span> <span class="st-card-unit">Mbps</span></div>
-      </div>
-    </div>
-    <div class="st-card" id="card-upload">
-      <div class="st-card-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 21V8M6 13l6-6 6 6" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 4h18" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div>
-        <span class="st-card-label">Upload</span>
-        <div class="st-card-val"><span id="val-upload">—</span> <span class="st-card-unit">Mbps</span></div>
-      </div>
-    </div>
-    <div class="st-card" id="card-ping">
-      <div class="st-card-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
-          <path d="M12 12l3.5-5" stroke="#c030e0" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="12" cy="12" r="1.5" fill="#c030e0"/>
-        </svg>
-      </div>
-      <div>
-        <span class="st-card-label">Latency</span>
-        <div class="st-card-val"><span id="val-ping">—</span> <span class="st-card-unit">ms</span></div>
-      </div>
-    </div>
-  </div>
-
-  <button id="startBtn" class="st-btn">START</button>
-  <p class="st-footer">Powered by Cloudflare · No data stored</p>
+  <p class="st-note">Powered by Cloudflare · No data stored</p>
 </main>
 
 <footer>
@@ -371,91 +444,48 @@
 </footer>
 
 <script>
-// ── Generate tick marks ──────────────────────────────────────
-(function buildTicks() {
-  const cx = 220, cy = 220;
-  const g = document.getElementById('tickGroup');
-  const majorSet = new Set([0, 100, 200, 300, 500, 1000]);
-  const midSet   = new Set([50, 150, 250, 350, 400, 450, 600, 700, 800, 900]);
-
-  function angleRad(s) {
-    return (180 - (s / 1000) * 180) * Math.PI / 180;
-  }
-
-  // Tick lines every 10 Mbps
-  for (let s = 0; s <= 1000; s += 10) {
-    const major = majorSet.has(s), mid = midSet.has(s);
-    const a = angleRad(s);
-    const cosA = Math.cos(a), sinA = Math.sin(a);
-    const outerR = 183;
-    const innerR = major ? 163 : (mid ? 171 : 177);
-    const sw = major ? '2.5' : (mid ? '1.5' : '1');
-    const sc = major ? 'rgba(255,255,255,.7)' : (mid ? 'rgba(255,255,255,.35)' : 'rgba(255,255,255,.18)');
-
-    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    ln.setAttribute('x1', (cx + outerR * cosA).toFixed(2));
-    ln.setAttribute('y1', (cy - outerR * sinA).toFixed(2));
-    ln.setAttribute('x2', (cx + innerR * cosA).toFixed(2));
-    ln.setAttribute('y2', (cy - innerR * sinA).toFixed(2));
-    ln.setAttribute('stroke', sc);
-    ln.setAttribute('stroke-width', sw);
-    g.appendChild(ln);
-  }
-
-  // Labels at major speeds
-  [[0,'0'],[100,'100'],[200,'200'],[300,'300'],[500,'500'],[1000,'1000']].forEach(([s, txt]) => {
-    const a = angleRad(s);
-    const r = 150;
-    const tx = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    tx.setAttribute('x', (cx + r * Math.cos(a)).toFixed(2));
-    tx.setAttribute('y', (cy - r * Math.sin(a) + 4.5).toFixed(2));
-    tx.setAttribute('text-anchor', 'middle');
-    tx.setAttribute('fill', 'rgba(255,255,255,.6)');
-    tx.setAttribute('font-size', '13');
-    tx.setAttribute('font-weight', '600');
-    tx.setAttribute('font-family', "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif");
-    tx.textContent = txt;
-    g.appendChild(tx);
-  });
-})();
-
-// ── Gauge helpers ────────────────────────────────────────────
-const needleEl  = document.getElementById('needleGroup');
-const phaseEl   = document.getElementById('gaugePhase');
-const speedEl   = document.getElementById('gaugeSpeed');
-const unitEl    = document.getElementById('gaugeUnit');
-
-function setNeedle(mbps) {
-  const clamped = Math.min(Math.max(mbps, 0), 1000);
-  // Needle points UP at rest (500 Mbps). Rotate: -90° = left (0), 0° = up (500), +90° = right (1000)
-  needleEl.style.transform = 'rotate(' + ((clamped / 1000 - 0.5) * 180) + 'deg)';
-  speedEl.textContent = mbps >= 1 ? mbps.toFixed(1) : (mbps > 0 ? mbps.toFixed(0) : '—');
-}
-// Initialise needle at 0 on page load
-setNeedle(0);
-
-function resetUI() {
-  setNeedle(0);
-  speedEl.textContent = '—';
-  phaseEl.textContent = 'READY';
-  unitEl.textContent = 'Mbps';
-  ['download','upload','ping'].forEach(k => {
-    document.getElementById('val-' + k).textContent = '—';
-    document.getElementById('card-' + k).className = 'st-card';
-  });
-  document.getElementById('stat-ping').textContent   = '—';
-  document.getElementById('stat-jitter').textContent = '—';
-}
-
-// ── Speed test logic ─────────────────────────────────────────
+// ── Speed test logic ──────────────────────────────────────────
 const BASE = 'https://speed.cloudflare.com';
 const ts   = () => '_=' + Date.now();
 
+async function fetchServerInfo() {
+  try {
+    const data = await fetch(BASE + '/meta').then(r => r.json());
+    const parts = [data.city, data.country].filter(Boolean);
+    document.querySelector('.st-server-name').textContent = parts.length ? parts.join(', ') : 'Cloudflare';
+  } catch (e) {
+    // keep default
+  }
+}
+
+function setCard(id, state) {
+  const el = document.getElementById('card-' + id);
+  if (el) el.className = 'st-card' + (state ? ' ' + state : '');
+}
+
+function setProgress(id, pct) {
+  const bar = document.getElementById('progress-' + id);
+  if (bar) bar.style.width = Math.min(100, pct) + '%';
+}
+
+function resetUI() {
+  ['download','upload','ping','jitter'].forEach(k => {
+    const el = document.getElementById('val-' + k);
+    if (el) el.textContent = '0';
+  });
+  setCard('download', '');
+  setCard('upload', '');
+  setCard('ping', '');
+  setCard('jitter', '');
+  setProgress('download', 0);
+  setProgress('upload', 0);
+  document.getElementById('val-loss').textContent = '0';
+}
+
 async function measurePing(samples) {
   samples = samples || 6;
-  phaseEl.textContent = 'PING';
-  unitEl.textContent  = 'ms';
-  document.getElementById('card-ping').classList.add('active');
+  setCard('ping', 'active');
+  setCard('jitter', 'active');
   const times = [];
   for (let i = 0; i < samples; i++) {
     const t0 = performance.now();
@@ -469,20 +499,18 @@ async function measurePing(samples) {
     times.reduce(function(s, v) { return s + Math.pow(v - mean, 2); }, 0) / times.length
   ));
   const ping = Math.round(median);
-  document.getElementById('stat-ping').textContent   = ping;
-  document.getElementById('stat-jitter').textContent = jitter;
-  document.getElementById('val-ping').textContent    = ping;
-  document.getElementById('card-ping').className = 'st-card done';
-  setNeedle(0);
+  document.getElementById('val-ping').textContent   = ping;
+  document.getElementById('val-jitter').textContent = jitter;
+  setCard('ping', 'done');
+  setCard('jitter', 'done');
   return ping;
 }
 
 async function measureDownload() {
-  phaseEl.textContent = 'DOWNLOAD';
-  unitEl.textContent  = 'Mbps';
-  document.getElementById('card-download').classList.add('active');
+  setCard('download', 'active');
   const sizes = [1e6, 1e7, 25e6];
-  let totalBytes = 0, totalMs = 0;
+  const totalExpected = sizes.reduce(function(s, v) { return s + v; }, 0);
+  let totalBytes = 0, totalMs = 0, receivedSoFar = 0;
   for (let i = 0; i < sizes.length; i++) {
     const size = sizes[i];
     const t0 = performance.now();
@@ -492,22 +520,25 @@ async function measureDownload() {
       const chunk = await reader.read();
       if (chunk.done) break;
       bytes += chunk.value.length;
-      setNeedle(bytes * 8 / 1e6 / ((performance.now() - t0) / 1000));
+      receivedSoFar += chunk.value.length;
+      const live = bytes * 8 / 1e6 / ((performance.now() - t0) / 1000);
+      document.getElementById('val-download').textContent = live.toFixed(1);
+      setProgress('download', receivedSoFar / totalExpected * 100);
     }
     totalBytes += size;
     totalMs    += performance.now() - t0;
   }
   const mbps = totalBytes * 8 / 1e6 / (totalMs / 1000);
-  document.getElementById('val-download').textContent = mbps.toFixed(1);
-  document.getElementById('card-download').className = 'st-card done';
+  document.getElementById('val-download').textContent = mbps.toFixed(2);
+  setProgress('download', 100);
+  setCard('download', 'done');
   return mbps;
 }
 
 async function measureUpload() {
-  phaseEl.textContent = 'UPLOAD';
-  unitEl.textContent  = 'Mbps';
-  document.getElementById('card-upload').classList.add('active');
+  setCard('upload', 'active');
   const sizes = [1e6, 5e6, 1e7];
+  const totalExpected = sizes.reduce(function(s, v) { return s + v; }, 0);
   let totalBytes = 0, totalMs = 0;
   for (let i = 0; i < sizes.length; i++) {
     const size = sizes[i];
@@ -515,37 +546,40 @@ async function measureUpload() {
     await fetch(BASE + '/__up?' + ts(), { method: 'POST', body: new Uint8Array(size) });
     totalBytes += size;
     totalMs    += performance.now() - t0;
-    setNeedle(totalBytes * 8 / 1e6 / (totalMs / 1000));
+    const live = totalBytes * 8 / 1e6 / (totalMs / 1000);
+    document.getElementById('val-upload').textContent = live.toFixed(1);
+    setProgress('upload', totalBytes / totalExpected * 100);
   }
   const mbps = totalBytes * 8 / 1e6 / (totalMs / 1000);
-  document.getElementById('val-upload').textContent = mbps.toFixed(1);
-  document.getElementById('card-upload').className = 'st-card done';
+  document.getElementById('val-upload').textContent = mbps.toFixed(2);
+  setProgress('upload', 100);
+  setCard('upload', 'done');
   return mbps;
 }
 
-// ── Start button ─────────────────────────────────────────────
+// ── Start button ──────────────────────────────────────────────
 const startBtn = document.getElementById('startBtn');
+const btnWrap  = startBtn.closest('.st-btn-wrap');
+
 startBtn.addEventListener('click', async function() {
   startBtn.disabled = true;
   startBtn.textContent = 'RUNNING…';
+  btnWrap.classList.add('running');
   resetUI();
   try {
     await measurePing();
-    unitEl.textContent = 'Mbps';
-    const dl = await measureDownload();
+    await measureDownload();
     await measureUpload();
-    phaseEl.textContent = 'COMPLETE';
-    setNeedle(dl);
+    startBtn.textContent = 'RUN AGAIN';
   } catch (err) {
-    phaseEl.textContent = 'ERROR';
-    speedEl.textContent = '!';
     console.error(err);
+    startBtn.textContent = 'ERROR — RETRY';
   }
+  btnWrap.classList.remove('running');
   startBtn.disabled = false;
-  startBtn.textContent = 'RUN AGAIN';
 });
 
-// ── Nav ──────────────────────────────────────────────────────
+// ── Nav ───────────────────────────────────────────────────────
 document.querySelector('.nav-toggle').addEventListener('click', function() {
   document.querySelector('.nav-links').classList.toggle('open');
 });
