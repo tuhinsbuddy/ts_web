@@ -65,15 +65,31 @@
       margin-bottom: .25rem;
     }
     .jc-subtitle {
-      font-size: .78rem; color: rgba(160,190,240,.45);
+      font-size: .78rem; color: rgba(180,210,255,.8);
       letter-spacing: .04em;
     }
+    .jc-badges {
+      display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+      justify-content: flex-end;
+    }
     .jc-badge {
-      font-size: .6rem; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: #7aaae8;
+      font-size: .6rem; font-weight: 700; letter-spacing: .08em;
+      border-radius: 20px; padding: .3rem .85rem;
+    }
+    .jc-badge-ios {
+      color: #7aaae8;
       background: rgba(70,110,200,.15);
       border: 1px solid rgba(70,110,200,.3);
-      border-radius: 20px; padding: .3rem .85rem;
+    }
+    .jc-badge-swift {
+      color: #fb9b50;
+      background: rgba(251,130,40,.1);
+      border: 1px solid rgba(251,130,40,.3);
+    }
+    .jc-badge-swiftui {
+      color: #a78bfa;
+      background: rgba(139,92,246,.1);
+      border: 1px solid rgba(139,92,246,.3);
     }
 
     /* ── Options bar ──────────────────────────────────── */
@@ -83,7 +99,7 @@
       margin-bottom: .75rem; flex-wrap: wrap;
     }
     .jc-opt-label {
-      font-size: .65rem; font-weight: 700; color: rgba(160,190,240,.45);
+      font-size: .65rem; font-weight: 700; color: rgba(180,210,255,.75);
       text-transform: uppercase; letter-spacing: .12em;
     }
     .jc-input-name {
@@ -134,15 +150,23 @@
     .jc-toggle-text {
       font-size: .72rem; font-weight: 600;
       color: rgba(160,190,240,.65);
+      transition: color .2s;
+    }
+    .jc-toggle input:checked ~ .jc-toggle-text {
+      color: rgba(220,240,255,1);
     }
 
-    .jc-btn-copy {
+    .jc-action-btns {
       margin-left: auto;
+      display: flex;
+      gap: .4rem;
+    }
+    .jc-btn-copy {
       background: rgba(8,18,46,.9);
       border: 1px solid rgba(70,110,200,.35);
       border-radius: 8px; padding: .4rem 1rem;
       color: #a8c0f0; font-size: .78rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
+      letter-spacing: .04em;
       cursor: pointer; transition: all .2s;
     }
     .jc-btn-copy:hover {
@@ -150,6 +174,8 @@
       border-color: rgba(100,150,255,.55);
       color: #d8e8ff;
     }
+    .jc-btn-copy:disabled { opacity: .3; cursor: not-allowed; }
+    .jc-btn-copy:disabled:hover { background: rgba(8,18,46,.9); border-color: rgba(70,110,200,.35); color: #a8c0f0; }
     .jc-btn-copy.copied { color: #4ade80; border-color: rgba(74,222,128,.4); }
 
     /* ── Main panels ──────────────────────────────────── */
@@ -247,7 +273,7 @@
     @media (max-width: 640px) {
       .jc-panels { flex-direction: column; }
       .jc-page { padding: 72px 3% 0; }
-      .jc-badge { display: none; }
+      .jc-badges { display: none; }
     }
   </style>
 </head>
@@ -269,7 +295,7 @@
     <li class="nav-dropdown">
       <a href="#" class="nav-dropdown-toggle">Tools ▾</a>
       <ul class="nav-dropdown-menu">
-        <li class="nav-cat">COMMON</li>
+        <li class="nav-cat">GENERAL</li>
         <li><a href="/tools/speedtest">Internet Speedometer</a></li>
         <li class="nav-cat">iOS</li>
         <li><a href="/tools/json-codable">JSON → Codable</a></li>
@@ -285,21 +311,25 @@
   <!-- Header -->
   <div class="jc-header">
     <div class="jc-header-left">
-      <h1 class="jc-title">JSON → Swift Codable</h1>
-      <p class="jc-subtitle">Paste any JSON. Get production-ready Swift structs instantly.</p>
+      <h1 class="jc-title">JSON → Codable</h1>
+      <p class="jc-subtitle">Paste any JSON. Download production-ready Swift Codable instantly.</p>
     </div>
-    <span class="jc-badge">iOS Tool</span>
+    <div class="jc-badges">
+      <span class="jc-badge jc-badge-ios">iOS</span>
+      <span class="jc-badge jc-badge-swift">Swift 4.0+</span>
+      <span class="jc-badge jc-badge-swiftui">SwiftUI</span>
+    </div>
   </div>
 
   <!-- Options bar -->
   <div class="jc-options">
-    <span class="jc-opt-label">Struct name</span>
+    <span class="jc-opt-label">File Name</span>
     <input type="text" class="jc-input-name" id="structName" value="MyModel" spellcheck="false">
 
     <label class="jc-toggle">
       <input type="checkbox" id="optOptional">
       <span class="jc-toggle-knob"></span>
-      <span class="jc-toggle-text">Optional fields</span>
+      <span class="jc-toggle-text">Optional</span>
     </label>
 
     <label class="jc-toggle">
@@ -308,7 +338,16 @@
       <span class="jc-toggle-text">Use var</span>
     </label>
 
-    <button class="jc-btn-copy" id="copyBtn">Copy</button>
+    <label class="jc-toggle">
+      <input type="checkbox" id="optCodingKeys" checked>
+      <span class="jc-toggle-knob"></span>
+      <span class="jc-toggle-text">CodingKeys</span>
+    </label>
+
+    <div class="jc-action-btns">
+      <button class="jc-btn-copy" id="downloadBtn" disabled>Download</button>
+      <button class="jc-btn-copy" id="copyBtn" disabled>Copy</button>
+    </div>
   </div>
 
   <!-- Panels -->
@@ -397,12 +436,12 @@ function needsRename(key) {
 }
 
 // ── Type resolver ─────────────────────────────────────────────
-function resolveType(value, keyName, useOptional, structs) {
+function resolveType(value, keyName, useOptional, useVar, forceCodingKeys, structs) {
   const opt = useOptional ? '?' : '';
   if (value === null || value === undefined) return 'String?';
   if (Array.isArray(value)) {
     if (!value.length) return '[Any]' + opt;
-    const elem = resolveType(value[0], keyName, false, structs);
+    const elem = resolveType(value[0], keyName, false, useVar, forceCodingKeys, structs);
     return '[' + elem + ']' + opt;
   }
   switch (typeof value) {
@@ -411,7 +450,7 @@ function resolveType(value, keyName, useOptional, structs) {
     case 'number':  return (Number.isInteger(value) ? 'Int' : 'Double') + opt;
     case 'object': {
       const name = toPascalCase(keyName);
-      generateStruct(value, name, useOptional, structs);
+      generateStruct(value, name, useOptional, useVar, forceCodingKeys, structs);
       return name + opt;
     }
   }
@@ -419,18 +458,20 @@ function resolveType(value, keyName, useOptional, structs) {
 }
 
 // ── Struct generator ──────────────────────────────────────────
-function generateStruct(obj, name, useOptional, useVar, structs) {
+function generateStruct(obj, name, useOptional, useVar, forceCodingKeys, structs) {
   if (structs.has(name)) return;
   structs.set(name, ''); // reserve slot to prevent recursion loops
 
   const binding = useVar ? 'var' : 'let';
   const keys = Object.keys(obj);
   const props = [];
-  const needsCodingKeys = keys.some(needsRename);
+  const hasSomethingToRename = keys.some(needsRename);
+  const emitCodingKeys = forceCodingKeys || hasSomethingToRename;
 
   for (const key of keys) {
     const propName = toCamelCase(key);
-    const type = resolveType(obj[key], key, useOptional || obj[key] === null, useVar, structs);
+    const isNullish = v => v === null || v === undefined;
+    const type = resolveType(obj[key], key, useOptional || isNullish(obj[key]), useVar, forceCodingKeys, structs);
     props.push({ key, propName, type });
   }
 
@@ -441,7 +482,7 @@ function generateStruct(obj, name, useOptional, useVar, structs) {
     lines.push('    ' + binding + ' ' + propName + ': ' + type);
   }
 
-  if (needsCodingKeys) {
+  if (emitCodingKeys) {
     lines.push('');
     lines.push('    enum CodingKeys: String, CodingKey {');
     for (const { key, propName } of props) {
@@ -459,7 +500,7 @@ function generateStruct(obj, name, useOptional, useVar, structs) {
 }
 
 // ── Main generator ────────────────────────────────────────────
-function generate(jsonStr, rootName, useOptional, useVar) {
+function generate(jsonStr, rootName, useOptional, useVar, forceCodingKeys) {
   const parsed = JSON.parse(jsonStr); // throws on invalid
 
   const root = Array.isArray(parsed) ? parsed[0] : parsed;
@@ -468,7 +509,7 @@ function generate(jsonStr, rootName, useOptional, useVar) {
   }
 
   const structs = new Map();
-  generateStruct(root, rootName, useOptional, useVar, structs);
+  generateStruct(root, rootName, useOptional, useVar, forceCodingKeys, structs);
 
   // Output: root struct first, then nested (reverse insertion order)
   const names = Array.from(structs.keys());
@@ -511,9 +552,11 @@ function highlight(code) {
 const jsonInput    = document.getElementById('jsonInput');
 const swiftOutput  = document.getElementById('swiftOutput');
 const structName   = document.getElementById('structName');
-const optOptional  = document.getElementById('optOptional');
-const optVar       = document.getElementById('optVar');
-const copyBtn      = document.getElementById('copyBtn');
+const optOptional    = document.getElementById('optOptional');
+const optVar         = document.getElementById('optVar');
+const optCodingKeys  = document.getElementById('optCodingKeys');
+const copyBtn        = document.getElementById('copyBtn');
+const downloadBtn    = document.getElementById('downloadBtn');
 const inputStatus  = document.getElementById('inputStatus');
 const outputStatus = document.getElementById('outputStatus');
 const errMsg       = document.getElementById('errMsg');
@@ -540,13 +583,15 @@ function run() {
       <p>Swift code will appear here</p>
     </div>`;
     lastSwift = '';
+    copyBtn.disabled = true;
+    downloadBtn.disabled = true;
     return;
   }
 
   const name = structName.value.trim() || 'MyModel';
 
   try {
-    lastSwift = generate(raw, name, optOptional.checked, optVar.checked);
+    lastSwift = generate(raw, name, optOptional.checked, optVar.checked, optCodingKeys.checked);
 
     // Count structs generated
     const count = (lastSwift.match(/^struct /mg) || []).length;
@@ -558,6 +603,8 @@ function run() {
     outputStatus.className = 'jc-panel-status ok';
 
     swiftOutput.innerHTML = highlight(lastSwift);
+    copyBtn.disabled = false;
+    downloadBtn.disabled = false;
   } catch (e) {
     inputStatus.textContent = 'Invalid JSON';
     inputStatus.className = 'jc-panel-status err';
@@ -566,7 +613,9 @@ function run() {
     errMsg.textContent = e.message;
     errMsg.style.display = 'block';
     lastSwift = '';
-    swiftOutput.innerHTML = `<div class="jc-empty"><p style="color:#f87171">${e.message}</p></div>`;
+    copyBtn.disabled = true;
+    downloadBtn.disabled = true;
+    swiftOutput.innerHTML = `<div class="jc-empty"><p style="color:rgba(220,80,80,1); font-size:1rem; font-weight:600;">Please provide correct JSON input.</p></div>`;
   }
 }
 
@@ -579,6 +628,7 @@ jsonInput.addEventListener('input', scheduleRun);
 structName.addEventListener('input', scheduleRun);
 optOptional.addEventListener('change', run);
 optVar.addEventListener('change', run);
+optCodingKeys.addEventListener('change', run);
 
 copyBtn.addEventListener('click', function() {
   if (!lastSwift) return;
@@ -590,6 +640,18 @@ copyBtn.addEventListener('click', function() {
       copyBtn.classList.remove('copied');
     }, 2000);
   });
+});
+
+downloadBtn.addEventListener('click', function() {
+  if (!lastSwift) return;
+  const filename = (structName.value.trim() || 'MyModel') + '.swift';
+  const blob = new Blob([lastSwift], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 });
 
 // ── Nav ───────────────────────────────────────────────────────
