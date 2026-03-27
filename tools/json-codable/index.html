@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuhin Samui - JSON to Codable</title>
+  <meta name="description" content="Paste any JSON and instantly get production-ready Swift Codable structs with CodingKeys, nested types, and optional handling.">
+  <script data-goatcounter="https://tuhinsamui.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <link rel="stylesheet" href="/_astro/future-ios.C8dQKi5L.css">
+  <style>
+    /* ── Base ─────────────────────────────────────────── */
+    html, body { height: 100%; overflow: hidden; }
+    body { display: flex; flex-direction: column; }
+    footer { flex-shrink: 0; padding: 1rem 2.5rem !important; min-height: unset !important; }
+
+    /* ── Nav ──────────────────────────────────────────── */
+    nav { background: rgba(7, 14, 32, 0.96) !important; border-bottom: 1px solid rgba(70,110,200,.12); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: none; }
+    .nav-dropdown.open  .nav-dropdown-menu { display: block; }
+    .nav-cat {
+      font-size: .58rem; font-weight: 700; color: rgba(255,255,255,.3);
+      
+      padding: .5rem .8rem .2rem; pointer-events: none; list-style: none;
+    }
+    .nav-soon { opacity: .4; pointer-events: none; display: flex; align-items: center; gap: .5rem; }
+    .nav-soon-badge {
+      font-size: .55rem; background: rgba(255,255,255,.1); border-radius: 3px;
+      padding: .1rem .35rem; letter-spacing: .04em; color: rgba(255,255,255,.5);
+    }
+
+    /* ── Page ─────────────────────────────────────────── */
+    .jc-page {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column;
+      background: #070e20;
+      position: relative; overflow: hidden;
+      padding: 72px 3% 0;
+    }
+    .jc-page::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(14,30,80,.85) 0%, transparent 70%);
+    }
+    .jc-page::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(80,130,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80,130,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    /* ── Header ───────────────────────────────────────── */
+    .jc-header {
+      position: relative; z-index: 1;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: .9rem;
+    }
+    .jc-header-left {}
+    .jc-title {
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      font-weight: 700; color: #7aaae8;
+      letter-spacing: .25em; text-transform: uppercase;
+      margin-bottom: .25rem;
+    }
+    .jc-subtitle {
+      font-size: .78rem; color: rgba(160,190,240,.45);
+      letter-spacing: .04em;
+    }
+    .jc-badge {
+      font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: #7aaae8;
+      background: rgba(70,110,200,.15);
+      border: 1px solid rgba(70,110,200,.3);
+      border-radius: 20px; padding: .3rem .85rem;
+    }
+
+    /* ── Options bar ──────────────────────────────────── */
+    .jc-options {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: .75rem; flex-wrap: wrap;
+    }
+    .jc-opt-label {
+      font-size: .65rem; font-weight: 700; color: rgba(160,190,240,.45);
+      text-transform: uppercase; letter-spacing: .12em;
+    }
+    .jc-input-name {
+      background: rgba(8,18,46,.9);
+      border: 1px solid rgba(70,110,200,.3);
+      border-radius: 8px;
+      color: #c8d8f8;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: .4rem .75rem;
+      width: 160px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .jc-input-name:focus { border-color: rgba(100,160,255,.6); }
+
+    .jc-toggle {
+      display: flex; align-items: center; gap: .5rem; cursor: pointer;
+      background: rgba(8,18,46,.9);
+      border: 1px solid rgba(70,110,200,.3);
+      border-radius: 8px; padding: .4rem .85rem;
+      transition: border-color .2s;
+      user-select: none;
+    }
+    .jc-toggle:hover { border-color: rgba(100,160,255,.4); }
+    .jc-toggle input { display: none; }
+    .jc-toggle-knob {
+      width: 28px; height: 15px;
+      background: rgba(70,110,200,.25);
+      border-radius: 8px; position: relative;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .jc-toggle-knob::after {
+      content: ''; position: absolute;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: rgba(160,190,240,.5);
+      top: 2px; left: 2px;
+      transition: transform .2s, background .2s;
+    }
+    .jc-toggle input:checked + .jc-toggle-knob {
+      background: rgba(80,160,80,.5);
+    }
+    .jc-toggle input:checked + .jc-toggle-knob::after {
+      transform: translateX(13px);
+      background: #4ade80;
+    }
+    .jc-toggle-text {
+      font-size: .72rem; font-weight: 600;
+      color: rgba(160,190,240,.65);
+    }
+
+    .jc-btn-copy {
+      margin-left: auto;
+      background: rgba(8,18,46,.9);
+      border: 1px solid rgba(70,110,200,.35);
+      border-radius: 8px; padding: .4rem 1rem;
+      color: #a8c0f0; font-size: .78rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; transition: all .2s;
+    }
+    .jc-btn-copy:hover {
+      background: rgba(30,55,120,.5);
+      border-color: rgba(100,150,255,.55);
+      color: #d8e8ff;
+    }
+    .jc-btn-copy.copied { color: #4ade80; border-color: rgba(74,222,128,.4); }
+
+    /* ── Main panels ──────────────────────────────────── */
+    .jc-panels {
+      position: relative; z-index: 1;
+      display: flex; gap: 10px;
+      flex: 1; min-height: 0;
+      padding-bottom: 1rem;
+    }
+
+    .jc-panel {
+      flex: 1; display: flex; flex-direction: column;
+      background: rgba(8,18,46,.82);
+      border: 1px solid rgba(70,110,200,.28);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color .3s;
+    }
+    .jc-panel:focus-within { border-color: rgba(100,160,255,.55); }
+
+    .jc-panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 1rem;
+      border-bottom: 1px solid rgba(70,110,200,.15);
+      flex-shrink: 0;
+    }
+    .jc-panel-title {
+      font-size: .6rem; font-weight: 700;
+      color: rgba(160,190,240,.4);
+      text-transform: uppercase; letter-spacing: .18em;
+    }
+    .jc-panel-status {
+      font-size: .62rem; color: rgba(160,190,240,.3);
+      letter-spacing: .05em;
+    }
+    .jc-panel-status.ok  { color: #4ade80; }
+    .jc-panel-status.err { color: #f87171; }
+
+    /* Input textarea */
+    .jc-textarea {
+      flex: 1; min-height: 0;
+      width: 100%; resize: none;
+      background: transparent;
+      border: none; outline: none;
+      color: #c8d8f8;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .82rem; line-height: 1.65;
+      padding: 1rem;
+      caret-color: #7aaae8;
+    }
+    .jc-textarea::placeholder { color: rgba(160,190,240,.2); }
+
+    /* Output code */
+    .jc-output {
+      flex: 1; min-height: 0;
+      overflow: auto;
+      padding: 1rem;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .82rem; line-height: 1.65;
+      white-space: pre;
+      color: #c8d8f8;
+    }
+    .jc-output::-webkit-scrollbar { width: 4px; height: 4px; }
+    .jc-output::-webkit-scrollbar-track { background: transparent; }
+    .jc-output::-webkit-scrollbar-thumb { background: rgba(100,150,255,.2); border-radius: 2px; }
+
+    /* Syntax highlighting */
+    .kw  { color: #7fb8f5; }   /* keywords */
+    .ty  { color: #a78bfa; }   /* types */
+    .str { color: #86efac; }   /* strings */
+    .cm  { color: rgba(160,190,240,.3); font-style: italic; }  /* comments */
+    .pn  { color: #c8d8f8; }   /* property names */
+    .nm  { color: #fbbf24; }   /* numbers */
+    .err-msg {
+      color: #f87171;
+      font-size: .78rem;
+      padding: .5rem 1rem;
+      border-top: 1px solid rgba(248,113,113,.2);
+      flex-shrink: 0;
+      display: none;
+    }
+
+    /* Empty state */
+    .jc-empty {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; gap: .5rem;
+      color: rgba(160,190,240,.18);
+      text-align: center;
+    }
+    .jc-empty svg { width: 36px; height: 36px; opacity: .4; }
+    .jc-empty p { font-size: .78rem; }
+
+    /* ── Mobile ───────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .jc-panels { flex-direction: column; }
+      .jc-page { padding: 72px 3% 0; }
+      .jc-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Tuhin Samui</a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#projects">Projects</a></li>
+    <li><a href="/#experience">Experience</a></li>
+    <li><a href="/#opensource">Open Source</a></li>
+    <li class="nav-dropdown">
+      <a href="#" class="nav-dropdown-toggle">Articles ▾</a>
+      <ul class="nav-dropdown-menu">
+        <li><a href="/articles/future-ios">Future of iOS</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown">
+      <a href="#" class="nav-dropdown-toggle">Tools ▾</a>
+      <ul class="nav-dropdown-menu">
+        <li class="nav-cat">COMMON</li>
+        <li><a href="/tools/speedtest">Internet Speedometer</a></li>
+        <li class="nav-cat">iOS</li>
+        <li><a href="/tools/json-codable">JSON → Codable</a></li>
+      </ul>
+    </li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</nav>
+
+<main class="jc-page">
+
+  <!-- Header -->
+  <div class="jc-header">
+    <div class="jc-header-left">
+      <h1 class="jc-title">JSON → Swift Codable</h1>
+      <p class="jc-subtitle">Paste any JSON. Get production-ready Swift structs instantly.</p>
+    </div>
+    <span class="jc-badge">iOS Tool</span>
+  </div>
+
+  <!-- Options bar -->
+  <div class="jc-options">
+    <span class="jc-opt-label">Struct name</span>
+    <input type="text" class="jc-input-name" id="structName" value="MyModel" spellcheck="false">
+
+    <label class="jc-toggle">
+      <input type="checkbox" id="optOptional">
+      <span class="jc-toggle-knob"></span>
+      <span class="jc-toggle-text">Optional fields</span>
+    </label>
+
+    <label class="jc-toggle">
+      <input type="checkbox" id="optVar">
+      <span class="jc-toggle-knob"></span>
+      <span class="jc-toggle-text">Use var</span>
+    </label>
+
+    <button class="jc-btn-copy" id="copyBtn">Copy</button>
+  </div>
+
+  <!-- Panels -->
+  <div class="jc-panels">
+
+    <!-- Input -->
+    <div class="jc-panel" style="flex: 1.05;">
+      <div class="jc-panel-header">
+        <span class="jc-panel-title">JSON Input</span>
+        <span class="jc-panel-status" id="inputStatus">Waiting for input</span>
+      </div>
+      <textarea class="jc-textarea" id="jsonInput" spellcheck="false"
+        placeholder='Paste your JSON here…
+
+{
+  "user_id": 42,
+  "first_name": "Tuhin",
+  "email": "tuhin@example.com",
+  "is_active": true,
+  "score": 9.8,
+  "address": {
+    "city": "Bengaluru",
+    "country": "IN"
+  },
+  "tags": ["ios", "swift"]
+}'></textarea>
+      <div class="err-msg" id="errMsg"></div>
+    </div>
+
+    <!-- Output -->
+    <div class="jc-panel" style="flex: 1;">
+      <div class="jc-panel-header">
+        <span class="jc-panel-title">Swift Output</span>
+        <span class="jc-panel-status" id="outputStatus">—</span>
+      </div>
+      <div class="jc-output" id="swiftOutput">
+        <div class="jc-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="8" y1="13" x2="16" y2="13"/>
+            <line x1="8" y1="17" x2="16" y2="17"/>
+          </svg>
+          <p>Swift code will appear here</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-social">
+    <a href="https://www.linkedin.com/in/tuhinsamui/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://stackoverflow.com/users/4977661/oncompletion" target="_blank" rel="noopener" aria-label="Stack Overflow">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.986 21.865v-6.404h2.134V24H1.844v-8.539h2.13v6.404h15.012zM6.111 19.731H16.85v-2.137H6.111v2.137zm.259-4.852l10.48 2.189.451-2.07-10.478-2.187-.453 2.068zm1.359-5.056l9.705 4.53.903-1.95-9.706-4.53-.902 1.95zm2.715-4.785l8.217 6.855 1.359-1.62-8.216-6.853-1.36 1.618zM15.751 0l-1.746 1.294 6.405 8.604 1.746-1.294L15.751 0z"/></svg>
+    </a>
+    <a href="https://github.com/tuhinsbuddy" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.745 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+    </a>
+    <a href="https://leetcode.com/u/ripperTMS/" target="_blank" rel="noopener" aria-label="LeetCode">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+    </a>
+  </div>
+  <p class="footer-copy">© 2026 Tuhin Samui. All Rights Reserved.</p>
+</footer>
+
+<script>
+// ── Helpers ───────────────────────────────────────────────────
+function toCamelCase(str) {
+  return str
+    .replace(/[-_]([a-z0-9])/gi, (_, c) => c.toUpperCase())
+    .replace(/^[A-Z]/, c => c.toLowerCase());
+}
+function toPascalCase(str) {
+  // singularize arrays: users → User, addresses → Address
+  let s = str.replace(/ies$/, 'y').replace(/([^s])s$/, '$1');
+  const c = toCamelCase(s);
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+function needsRename(key) {
+  return toCamelCase(key) !== key;
+}
+
+// ── Type resolver ─────────────────────────────────────────────
+function resolveType(value, keyName, useOptional, structs) {
+  const opt = useOptional ? '?' : '';
+  if (value === null || value === undefined) return 'String?';
+  if (Array.isArray(value)) {
+    if (!value.length) return '[Any]' + opt;
+    const elem = resolveType(value[0], keyName, false, structs);
+    return '[' + elem + ']' + opt;
+  }
+  switch (typeof value) {
+    case 'string':  return 'String'  + opt;
+    case 'boolean': return 'Bool'    + opt;
+    case 'number':  return (Number.isInteger(value) ? 'Int' : 'Double') + opt;
+    case 'object': {
+      const name = toPascalCase(keyName);
+      generateStruct(value, name, useOptional, structs);
+      return name + opt;
+    }
+  }
+  return 'Any' + opt;
+}
+
+// ── Struct generator ──────────────────────────────────────────
+function generateStruct(obj, name, useOptional, useVar, structs) {
+  if (structs.has(name)) return;
+  structs.set(name, ''); // reserve slot to prevent recursion loops
+
+  const binding = useVar ? 'var' : 'let';
+  const keys = Object.keys(obj);
+  const props = [];
+  const needsCodingKeys = keys.some(needsRename);
+
+  for (const key of keys) {
+    const propName = toCamelCase(key);
+    const type = resolveType(obj[key], key, useOptional || obj[key] === null, useVar, structs);
+    props.push({ key, propName, type });
+  }
+
+  const lines = [];
+  lines.push('struct ' + name + ': Codable {');
+
+  for (const { propName, type } of props) {
+    lines.push('    ' + binding + ' ' + propName + ': ' + type);
+  }
+
+  if (needsCodingKeys) {
+    lines.push('');
+    lines.push('    enum CodingKeys: String, CodingKey {');
+    for (const { key, propName } of props) {
+      if (needsRename(key)) {
+        lines.push('        case ' + propName + ' = "' + key + '"');
+      } else {
+        lines.push('        case ' + propName);
+      }
+    }
+    lines.push('    }');
+  }
+
+  lines.push('}');
+  structs.set(name, lines.join('\n'));
+}
+
+// ── Main generator ────────────────────────────────────────────
+function generate(jsonStr, rootName, useOptional, useVar) {
+  const parsed = JSON.parse(jsonStr); // throws on invalid
+
+  const root = Array.isArray(parsed) ? parsed[0] : parsed;
+  if (!root || typeof root !== 'object') {
+    throw new Error('Root must be a JSON object or array of objects');
+  }
+
+  const structs = new Map();
+  generateStruct(root, rootName, useOptional, useVar, structs);
+
+  // Output: root struct first, then nested (reverse insertion order)
+  const names = Array.from(structs.keys());
+  const rootCode = structs.get(rootName) || '';
+  const nestedCodes = names
+    .filter(n => n !== rootName)
+    .map(n => structs.get(n))
+    .filter(Boolean);
+
+  const header = Array.isArray(parsed)
+    ? '// Root type: [' + rootName + ']\n\n'
+    : '';
+
+  return header + [rootCode, ...nestedCodes].join('\n\n');
+}
+
+// ── Syntax highlighter ────────────────────────────────────────
+function highlight(code) {
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  return escaped
+    // comments first (before other replacements touch them)
+    .replace(/(\/\/[^\n]*)/g, '<span class="cm">$1</span>')
+    // string literals
+    .replace(/"([^"<]*)"/g, '<span class="str">"$1"</span>')
+    // keywords
+    .replace(/\b(struct|enum|let|var|case|import|extension|func|return|nil|true|false|if|else|guard|where|class|protocol)\b/g,
+      '<span class="kw">$1</span>')
+    // known types
+    .replace(/\b(String|Int|Double|Bool|Float|Any|Codable|CodingKey|Decodable|Encodable)\b/g,
+      '<span class="ty">$1</span>')
+    // struct name (PascalCase words that aren't already wrapped)
+    .replace(/\b([A-Z][a-zA-Z0-9]+)\b(?![^<]*>)/g, '<span class="ty">$1</span>');
+}
+
+// ── UI wiring ─────────────────────────────────────────────────
+const jsonInput    = document.getElementById('jsonInput');
+const swiftOutput  = document.getElementById('swiftOutput');
+const structName   = document.getElementById('structName');
+const optOptional  = document.getElementById('optOptional');
+const optVar       = document.getElementById('optVar');
+const copyBtn      = document.getElementById('copyBtn');
+const inputStatus  = document.getElementById('inputStatus');
+const outputStatus = document.getElementById('outputStatus');
+const errMsg       = document.getElementById('errMsg');
+
+let lastSwift = '';
+let debounceTimer = null;
+
+function run() {
+  const raw = jsonInput.value.trim();
+  errMsg.style.display = 'none';
+
+  if (!raw) {
+    inputStatus.textContent = 'Waiting for input';
+    inputStatus.className = 'jc-panel-status';
+    outputStatus.textContent = '—';
+    outputStatus.className = 'jc-panel-status';
+    swiftOutput.innerHTML = `<div class="jc-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="8" y1="13" x2="16" y2="13"/>
+        <line x1="8" y1="17" x2="16" y2="17"/>
+      </svg>
+      <p>Swift code will appear here</p>
+    </div>`;
+    lastSwift = '';
+    return;
+  }
+
+  const name = structName.value.trim() || 'MyModel';
+
+  try {
+    lastSwift = generate(raw, name, optOptional.checked, optVar.checked);
+
+    // Count structs generated
+    const count = (lastSwift.match(/^struct /mg) || []).length;
+    const propCount = (lastSwift.match(/^\s+(let|var) /mg) || []).length;
+
+    inputStatus.textContent = 'Valid JSON';
+    inputStatus.className = 'jc-panel-status ok';
+    outputStatus.textContent = count + ' struct' + (count !== 1 ? 's' : '') + ', ' + propCount + ' propert' + (propCount !== 1 ? 'ies' : 'y');
+    outputStatus.className = 'jc-panel-status ok';
+
+    swiftOutput.innerHTML = highlight(lastSwift);
+  } catch (e) {
+    inputStatus.textContent = 'Invalid JSON';
+    inputStatus.className = 'jc-panel-status err';
+    outputStatus.textContent = 'Error';
+    outputStatus.className = 'jc-panel-status err';
+    errMsg.textContent = e.message;
+    errMsg.style.display = 'block';
+    lastSwift = '';
+    swiftOutput.innerHTML = `<div class="jc-empty"><p style="color:#f87171">${e.message}</p></div>`;
+  }
+}
+
+function scheduleRun() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(run, 280);
+}
+
+jsonInput.addEventListener('input', scheduleRun);
+structName.addEventListener('input', scheduleRun);
+optOptional.addEventListener('change', run);
+optVar.addEventListener('change', run);
+
+copyBtn.addEventListener('click', function() {
+  if (!lastSwift) return;
+  navigator.clipboard.writeText(lastSwift).then(function() {
+    copyBtn.textContent = 'Copied!';
+    copyBtn.classList.add('copied');
+    setTimeout(function() {
+      copyBtn.textContent = 'Copy';
+      copyBtn.classList.remove('copied');
+    }, 2000);
+  });
+});
+
+// ── Nav ───────────────────────────────────────────────────────
+document.querySelector('.nav-toggle').addEventListener('click', function() {
+  document.querySelector('.nav-links').classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.querySelector('.nav-links').classList.remove('open');
+  });
+});
+document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const parent = btn.closest('.nav-dropdown');
+    const isOpen = parent.classList.contains('open');
+    document.querySelectorAll('.nav-dropdown').forEach(function(d) { d.classList.remove('open'); });
+    if (!isOpen) parent.classList.add('open');
+  });
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(function(d) { d.classList.remove('open'); });
+  }
+});
+</script>
+
+</body>
+</html>

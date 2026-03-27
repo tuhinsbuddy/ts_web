@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tuhin Samui - Speed Test</title>
+  <title>Tuhin Samui - Internet Speedometer</title>
   <meta name="description" content="Test your internet connection speed — download, upload, and ping — directly in your browser.">
   <script data-goatcounter="https://tuhinsamui.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <link rel="stylesheet" href="/_astro/future-ios.C8dQKi5L.css">
@@ -28,7 +28,7 @@
     /* Category labels */
     .nav-cat {
       font-size: .58rem; font-weight: 700; color: rgba(255,255,255,.3);
-      text-transform: uppercase; letter-spacing: .15em;
+      
       padding: .5rem .8rem .2rem; pointer-events: none; list-style: none;
     }
     .nav-soon { opacity: .4; pointer-events: none; display: flex; align-items: center; gap: .5rem; }
@@ -354,8 +354,8 @@
     <li class="nav-dropdown">
       <a href="#" class="nav-dropdown-toggle">Tools ▾</a>
       <ul class="nav-dropdown-menu">
-        <li class="nav-cat">Common</li>
-        <li><a href="/tools/speedtest">Speed Test</a></li>
+        <li class="nav-cat">COMMON</li>
+        <li><a href="/tools/speedtest">Internet Speedometer</a></li>
         <li class="nav-cat">iOS</li>
         <li><a href="/tools/json-codable" class="nav-soon">JSON → Codable <span class="nav-soon-badge">Soon</span></a></li>
       </ul>
@@ -366,7 +366,7 @@
 </nav>
 
 <main class="st-page">
-  <h1 class="st-title">Internet Speed Test</h1>
+  <h1 class="st-title">Internet Speedometer</h1>
 
   <div class="st-layout">
 
@@ -410,7 +410,7 @@
           </div>
         </div>
         <div class="st-btn-wrap">
-          <button id="startBtn" class="st-btn">Start Speed Test</button>
+          <button id="startBtn" class="st-btn">Start Test</button>
 
         </div>
       </div>
@@ -603,8 +603,16 @@ document.querySelectorAll('.nav-links a').forEach(function(a) {
 document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {
   btn.addEventListener('click', function(e) {
     e.preventDefault();
-    btn.closest('.nav-dropdown').classList.toggle('open');
+    const parent = btn.closest('.nav-dropdown');
+    const isOpen = parent.classList.contains('open');
+    document.querySelectorAll('.nav-dropdown').forEach(function(d) { d.classList.remove('open'); });
+    if (!isOpen) parent.classList.add('open');
   });
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(function(d) { d.classList.remove('open'); });
+  }
 });
 </script>
 
