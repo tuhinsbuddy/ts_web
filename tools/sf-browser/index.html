@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuhin Samui - SF Symbols Browser</title>
+  <meta name="description" content="Browse, search and generate SwiftUI and UIKit code for SF Symbols with rendering modes, layers, availability and customization options.">
+  <script data-goatcounter="https://tuhinsamui.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <link rel="stylesheet" href="/_astro/future-ios.C8dQKi5L.css">
+  <style>
+    /* ── Base ─────────────────────────────────────────── */
+    html, body { height: 100%; overflow: hidden; }
+    body { display: flex; flex-direction: column; }
+    footer { flex-shrink: 0; padding: 1rem 2.5rem !important; min-height: unset !important; }
+
+    /* ── Nav ──────────────────────────────────────────── */
+    nav { background: rgba(7,14,32,0.96) !important; border-bottom: 1px solid rgba(70,110,200,.12); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: none; }
+    .nav-dropdown.open  .nav-dropdown-menu { display: block; }
+    .nav-cat { font-size: .58rem; font-weight: 700; color: rgba(255,255,255,.3); padding: .5rem .8rem .2rem; pointer-events: none; list-style: none; }
+
+    /* ── Page ─────────────────────────────────────────── */
+    .sf-page {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column;
+      padding: 72px 0 0;
+      background: #070e20;
+    }
+
+    /* ── Header ───────────────────────────────────────── */
+    .sf-header {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+      padding: 1.25rem 2rem .75rem;
+      border-bottom: 1px solid rgba(70,110,200,.12);
+      flex-shrink: 0;
+    }
+    .sf-header-left { display: flex; flex-direction: column; gap: .2rem; }
+    .sf-title {
+      font-size: 1.6rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+      background: linear-gradient(90deg, #4da6ff 0%, #7dd4fc 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sf-subtitle { font-size: .78rem; color: rgba(180,210,255,.8); letter-spacing: .04em; }
+    .sf-badges { display: flex; align-items: center; gap: .5rem; }
+    .sf-badge {
+      font-size: .6rem; font-weight: 700; padding: .2rem .55rem; border-radius: 4px;
+      letter-spacing: .06em;
+    }
+    .sf-badge-ios   { background: rgba(10,132,255,.18); color: #4da6ff; border: 1px solid rgba(10,132,255,.3); }
+    .sf-badge-swift { background: rgba(255,100,50,.18); color: #ff7a50; border: 1px solid rgba(255,100,50,.3); }
+    .sf-badge-ver   { background: rgba(100,80,200,.18); color: #a78bfa; border: 1px solid rgba(100,80,200,.3); }
+
+    /* ── Controls ─────────────────────────────────────── */
+    .sf-controls {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .75rem 2rem;
+      border-bottom: 1px solid rgba(70,110,200,.1);
+      flex-shrink: 0; overflow-x: auto;
+    }
+    .sf-controls::-webkit-scrollbar { height: 0; }
+    .sf-search-wrap { position: relative; width: 220px; flex-shrink: 0; }
+    .sf-search-wrap svg { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); opacity: .4; pointer-events: none; }
+    .sf-search {
+      width: 100%; padding: .45rem .75rem .45rem 2.1rem;
+      background: rgba(8,18,46,.9); border: 1px solid rgba(70,110,200,.3);
+      border-radius: 8px; color: #c8d8f8; font-size: .85rem; outline: none;
+      transition: border-color .2s;
+    }
+    .sf-search:focus { border-color: rgba(100,160,255,.6); }
+    .sf-search::placeholder { color: rgba(160,190,240,.35); }
+
+    .sf-filter-group { display: flex; align-items: center; gap: .35rem; flex-shrink: 0; }
+    .sf-filter-label { font-size: .6rem; font-weight: 700; color: rgba(180,210,255,.5); letter-spacing: .1em; white-space: nowrap; }
+    .sf-pill {
+      font-size: .7rem; font-weight: 600; padding: .28rem .65rem;
+      border-radius: 20px; cursor: pointer; border: 1px solid rgba(70,110,200,.25);
+      background: rgba(8,18,46,.8); color: rgba(160,190,240,.7);
+      transition: all .15s; white-space: nowrap; user-select: none;
+    }
+    .sf-pill:hover { border-color: rgba(100,160,255,.4); color: rgba(200,220,255,.9); }
+    .sf-pill.active { background: rgba(10,132,255,.2); border-color: rgba(10,132,255,.5); color: #6eb8ff; }
+
+    .sf-count { font-size: .72rem; color: rgba(160,190,240,.5); white-space: nowrap; margin-left: auto; }
+
+    /* ── Main layout ──────────────────────────────────── */
+    .sf-main {
+      flex: 1; min-height: 0;
+      display: flex; overflow: hidden;
+    }
+
+    /* ── Grid ─────────────────────────────────────────── */
+    .sf-grid-wrap {
+      flex: 1; min-width: 0;
+      overflow-y: auto;
+      padding: 1rem 1.25rem;
+    }
+    .sf-grid-wrap::-webkit-scrollbar { width: 4px; }
+    .sf-grid-wrap::-webkit-scrollbar-track { background: transparent; }
+    .sf-grid-wrap::-webkit-scrollbar-thumb { background: rgba(100,150,255,.2); border-radius: 2px; }
+
+    .sf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: .6rem;
+    }
+
+    .sf-card {
+      background: rgba(8,18,46,.7); border: 1px solid rgba(70,110,200,.18);
+      border-radius: 10px; padding: .75rem .6rem .6rem;
+      cursor: pointer; transition: all .15s;
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      text-align: center; min-width: 0;
+    }
+    .sf-card:hover { border-color: rgba(100,160,255,.4); background: rgba(12,25,65,.9); }
+    .sf-card.selected { border-color: rgba(10,132,255,.6); background: rgba(10,80,180,.12); box-shadow: 0 0 0 1px rgba(10,132,255,.3); }
+
+    .sf-card-preview {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,.07); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; line-height: 1;
+    }
+    .sf-card-preview span[style] { filter: none; }
+    .sf-card-name {
+      font-size: .68rem; font-weight: 600;
+      color: rgba(210,230,255,.92); word-break: break-word; line-height: 1.35;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+    }
+    .sf-card-ios {
+      font-size: .52rem; font-weight: 700; padding: .1rem .35rem;
+      border-radius: 3px; background: rgba(10,132,255,.12); color: rgba(100,170,255,.7);
+      border: 1px solid rgba(10,132,255,.2);
+    }
+
+    .sf-empty-state {
+      grid-column: 1 / -1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 4rem; gap: .75rem; color: rgba(160,190,240,.4);
+    }
+    .sf-empty-state p { font-size: .9rem; }
+
+    /* ── Detail Panel ─────────────────────────────────── */
+    .sf-detail {
+      width: 340px; flex-shrink: 0;
+      border-left: 1px solid rgba(70,110,200,.15);
+      overflow-y: auto;
+      display: flex; flex-direction: column;
+      background: rgba(5,11,28,.6);
+    }
+    .sf-detail::-webkit-scrollbar { width: 4px; }
+    .sf-detail::-webkit-scrollbar-track { background: transparent; }
+    .sf-detail::-webkit-scrollbar-thumb { background: rgba(100,150,255,.2); border-radius: 2px; }
+
+    .sf-detail-empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: .75rem; color: rgba(160,190,240,.3); padding: 2rem;
+      text-align: center;
+    }
+    .sf-detail-empty svg { opacity: .3; }
+    .sf-detail-empty p { font-size: .82rem; }
+
+    .sf-detail-content { padding: 1.25rem; display: flex; flex-direction: column; gap: 1.1rem; }
+
+    .sf-sym-hero {
+      display: flex; flex-direction: column; align-items: center; gap: .6rem; padding: .75rem;
+      background: rgba(8,18,46,.8); border-radius: 12px; border: 1px solid rgba(70,110,200,.2);
+      text-align: center;
+    }
+    .sf-sym-hero-name {
+      font-size: .85rem; font-weight: 700;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: #c8d8f8; word-break: break-all;
+    }
+    .sf-sym-hero-preview {
+      width: 64px; height: 64px;
+      background: rgba(255,255,255,.04); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: -apple-system, "SF Pro Display", system-ui, sans-serif;
+      font-size: 36px; color: rgba(180,210,255,.9);
+    }
+    .sf-copy-name {
+      font-size: .68rem; font-weight: 600; padding: .22rem .6rem;
+      border-radius: 5px; background: rgba(10,132,255,.15);
+      border: 1px solid rgba(10,132,255,.3); color: #5aabff;
+      cursor: pointer; transition: all .15s;
+    }
+    .sf-copy-name:hover { background: rgba(10,132,255,.25); }
+
+    /* Meta row */
+    .sf-meta-row { display: flex; flex-direction: column; gap: .5rem; }
+    .sf-meta-label { font-size: .6rem; font-weight: 700; color: rgba(180,210,255,.5); letter-spacing: .1em; text-transform: uppercase; }
+    .sf-meta-pills { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .sf-mode-pill {
+      font-size: .63rem; font-weight: 600; padding: .22rem .6rem; border-radius: 5px;
+      border: 1px solid rgba(70,110,200,.3); color: rgba(160,190,240,.7);
+      background: rgba(8,18,46,.8);
+    }
+    .sf-mode-pill.mode-M { border-color: rgba(120,180,255,.3); color: #7bb8ff; }
+    .sf-mode-pill.mode-H { border-color: rgba(160,100,255,.3); color: #c47aff; }
+    .sf-mode-pill.mode-P { border-color: rgba(255,160,60,.3); color: #ffb347; }
+    .sf-mode-pill.mode-C { border-color: rgba(80,200,120,.3); color: #4ecb71; }
+    .sf-avail-badge {
+      font-size: .65rem; font-weight: 700; padding: .22rem .6rem; border-radius: 5px;
+      background: rgba(10,132,255,.12); border: 1px solid rgba(10,132,255,.25); color: #5aabff;
+    }
+    .sf-layer-info { font-size: .75rem; color: rgba(180,210,255,.8); }
+
+    /* Options */
+    .sf-options-block { display: flex; flex-direction: column; gap: .65rem; }
+    .sf-opt-row { display: flex; flex-direction: column; gap: .35rem; }
+    .sf-opt-label { font-size: .6rem; font-weight: 700; color: rgba(180,210,255,.5); letter-spacing: .1em; text-transform: uppercase; }
+    .sf-opt-select {
+      background: rgba(8,18,46,.9); border: 1px solid rgba(70,110,200,.3);
+      border-radius: 7px; color: #c8d8f8; font-size: .8rem; padding: .35rem .65rem;
+      outline: none; cursor: pointer; transition: border-color .2s;
+    }
+    .sf-opt-select:focus { border-color: rgba(100,160,255,.6); }
+    .sf-opt-slider-row { display: flex; align-items: center; gap: .6rem; }
+    .sf-opt-slider {
+      flex: 1; -webkit-appearance: none; height: 3px;
+      background: rgba(70,110,200,.3); border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .sf-opt-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: #4da6ff; cursor: pointer;
+    }
+    .sf-opt-slider-val { font-size: .72rem; font-weight: 700; color: #7bb8ff; min-width: 28px; text-align: right; }
+    .sf-color-swatches { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .sf-swatch {
+      width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+      border: 2px solid transparent; transition: all .15s;
+    }
+    .sf-swatch.active { border-color: #fff; transform: scale(1.2); }
+    .sf-mode-select-pills { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .sf-mode-select-pill {
+      font-size: .63rem; font-weight: 600; padding: .22rem .55rem; border-radius: 5px;
+      border: 1px solid rgba(70,110,200,.25); color: rgba(160,190,240,.6);
+      background: rgba(8,18,46,.8); cursor: pointer; transition: all .15s;
+    }
+    .sf-mode-select-pill:hover { border-color: rgba(100,160,255,.4); color: rgba(200,220,255,.9); }
+    .sf-mode-select-pill.active { background: rgba(10,132,255,.2); border-color: rgba(10,132,255,.5); color: #6eb8ff; }
+    .sf-mode-select-pill.disabled { opacity: .3; pointer-events: none; }
+
+    /* Code output */
+    .sf-code-block { display: flex; flex-direction: column; gap: .5rem; }
+    .sf-code-tabs { display: flex; gap: .35rem; }
+    .sf-code-tab {
+      font-size: .68rem; font-weight: 600; padding: .25rem .65rem; border-radius: 5px 5px 0 0;
+      border: 1px solid rgba(70,110,200,.25); border-bottom: none;
+      background: rgba(8,18,46,.6); color: rgba(160,190,240,.5);
+      cursor: pointer; transition: all .15s;
+    }
+    .sf-code-tab.active { background: rgba(8,18,46,1); border-color: rgba(100,160,255,.3); color: #a0c8ff; }
+    .sf-code-wrap {
+      background: rgba(8,18,46,1); border: 1px solid rgba(70,110,200,.25);
+      border-radius: 0 8px 8px 8px; padding: .85rem 1rem;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .75rem; line-height: 1.7;
+      color: #c8d8f8; white-space: pre; overflow-x: auto; position: relative;
+    }
+    .sf-code-wrap::-webkit-scrollbar { height: 3px; }
+    .sf-code-wrap::-webkit-scrollbar-thumb { background: rgba(100,150,255,.2); border-radius: 2px; }
+    .sf-code-copy {
+      position: absolute; top: .5rem; right: .5rem;
+      font-size: .6rem; font-weight: 600; padding: .18rem .5rem;
+      border-radius: 4px; background: rgba(10,132,255,.15);
+      border: 1px solid rgba(10,132,255,.25); color: #5aabff;
+      cursor: pointer; transition: all .15s;
+    }
+    .sf-code-copy:hover { background: rgba(10,132,255,.3); }
+
+    /* Syntax highlighting */
+    .kw  { color: #7fb8f5; }
+    .ty  { color: #c47aff; }
+    .str { color: #74c99c; }
+    .num { color: #ffb347; }
+    .cm  { color: rgba(160,190,240,.45); font-style: italic; }
+    .dot { color: rgba(160,190,240,.5); }
+
+    /* ── Mobile ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .sf-detail { display: none; }
+      .sf-header { padding: 1rem; }
+      .sf-controls { padding: .6rem 1rem; }
+      .sf-grid-wrap { padding: .75rem; }
+      .sf-badges { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Tuhin Samui</a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#projects">Projects</a></li>
+    <li><a href="/#experience">Experience</a></li>
+    <li><a href="/#opensource">Open Source</a></li>
+    <li class="nav-dropdown">
+      <a href="#" class="nav-dropdown-toggle">Articles ▾</a>
+      <ul class="nav-dropdown-menu">
+        <li><a href="/articles/future-ios">Future of iOS</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown">
+      <a href="#" class="nav-dropdown-toggle">Tools ▾</a>
+      <ul class="nav-dropdown-menu">
+        <li class="nav-cat">GENERAL</li>
+        <li><a href="/tools/speedtest">Internet Speedometer</a></li>
+        <li class="nav-cat">iOS</li>
+        <li><a href="/tools/json-codable">JSON → Codable</a></li>
+        <li><a href="/tools/sf-browser">SF Symbols Browser</a></li>
+      </ul>
+    </li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+</nav>
+
+<main class="sf-page">
+
+  <div class="sf-header">
+    <div class="sf-header-left">
+      <h1 class="sf-title">SF Browser</h1>
+      <p class="sf-subtitle">Search symbols. Customize options. Copy production-ready SwiftUI &amp; UIKit code.</p>
+    </div>
+    <div class="sf-badges">
+      <span class="sf-badge sf-badge-ios">iOS</span>
+      <span class="sf-badge" style="background:rgba(255,180,0,.12);color:#ffc84a;border:1px solid rgba(255,180,0,.3);">Swift</span>
+      <span class="sf-badge sf-badge-ver">SwiftUI</span>
+      <span class="sf-badge sf-badge-swift">SF Symbols</span>
+    </div>
+  </div>
+
+  <div class="sf-controls">
+    <div class="sf-search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="sf-search" id="sfSearch" placeholder="Search symbols…" spellcheck="false" autocomplete="off">
+    </div>
+    <div class="sf-filter-group">
+      <span class="sf-filter-label">iOS Version</span>
+      <button class="sf-pill active" data-ios="0">All</button>
+      <button class="sf-pill" data-ios="13">13+</button>
+      <button class="sf-pill" data-ios="14">14+</button>
+      <button class="sf-pill" data-ios="15">15+</button>
+      <button class="sf-pill" data-ios="16">16+</button>
+      <button class="sf-pill" data-ios="17">17+</button>
+    </div>
+    <span class="sf-count" id="sfCount"></span>
+  </div>
+
+  <div class="sf-main">
+
+    <!-- Symbol Grid -->
+    <div class="sf-grid-wrap">
+      <!-- Category pills -->
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.85rem;" id="catPills"></div>
+      <div class="sf-grid" id="sfGrid"></div>
+    </div>
+
+    <!-- Detail Panel -->
+    <div class="sf-detail" id="sfDetail">
+      <div class="sf-detail-empty" id="sfDetailEmpty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <p>Select a symbol to see details and generate code</p>
+      </div>
+      <div class="sf-detail-content" id="sfDetailContent" style="display:none;">
+
+        <!-- Hero -->
+        <div class="sf-sym-hero">
+          <div class="sf-sym-hero-preview" id="dPreview"></div>
+          <div class="sf-sym-hero-name" id="dName"></div>
+          <button class="sf-copy-name" id="dCopyName">Copy Name</button>
+        </div>
+
+        <!-- Metadata -->
+        <div class="sf-meta-row">
+          <div class="sf-meta-label">Availability</div>
+          <div class="sf-meta-pills">
+            <span class="sf-avail-badge" id="dAvail"></span>
+            <span class="sf-avail-badge" id="dLayers" style="background:rgba(100,80,200,.12);border-color:rgba(100,80,200,.25);color:#a78bfa;"></span>
+          </div>
+        </div>
+        <div class="sf-meta-row">
+          <div class="sf-meta-label">Rendering Modes</div>
+          <div class="sf-meta-pills" id="dModes"></div>
+        </div>
+
+        <!-- Options -->
+        <div class="sf-options-block">
+          <div class="sf-meta-label" style="margin-bottom:-.1rem;">Customize</div>
+
+          <div class="sf-opt-row">
+            <div class="sf-opt-label">Rendering Mode</div>
+            <div class="sf-mode-select-pills" id="dModeSelect"></div>
+          </div>
+
+          <div class="sf-opt-row">
+            <div class="sf-opt-label">Size — <span id="sizeVal">24</span>pt</div>
+            <div class="sf-opt-slider-row">
+              <input type="range" class="sf-opt-slider" id="sizeSlider" min="12" max="96" value="24">
+            </div>
+          </div>
+
+          <div class="sf-opt-row">
+            <div class="sf-opt-label">Weight</div>
+            <select class="sf-opt-select" id="weightSelect">
+              <option value="ultraLight">Ultra Light</option>
+              <option value="thin">Thin</option>
+              <option value="light">Light</option>
+              <option value="regular" selected>Regular</option>
+              <option value="medium">Medium</option>
+              <option value="semibold">Semibold</option>
+              <option value="bold">Bold</option>
+              <option value="heavy">Heavy</option>
+              <option value="black">Black</option>
+            </select>
+          </div>
+
+          <div class="sf-opt-row">
+            <div class="sf-opt-label">Color</div>
+            <div class="sf-color-swatches" id="colorSwatches"></div>
+          </div>
+        </div>
+
+        <!-- Code -->
+        <div class="sf-code-block">
+          <div class="sf-meta-label">Generated Code</div>
+          <div class="sf-code-tabs">
+            <button class="sf-code-tab active" data-tab="swiftui">SwiftUI</button>
+            <button class="sf-code-tab" data-tab="uikit">UIKit</button>
+          </div>
+          <div class="sf-code-wrap" id="sfCodeWrap">
+            <button class="sf-code-copy" id="sfCodeCopy">Copy</button>
+            <div id="sfCodeOut"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;font-size:.75rem;color:rgba(160,190,240,.4);">
+    <span>SF Symbols is a trademark of Apple Inc.</span>
+    <a href="https://developer.apple.com/sf-symbols/" target="_blank" rel="noopener" style="color:rgba(100,160,255,.5);text-decoration:none;">Apple SF Symbols ↗</a>
+  </div>
+</footer>
+
+<script>
+// ── Symbol Data ───────────────────────────────────────────────
+// n=name, c=category, v=min iOS, m=modes (M=Mono,H=Hierarchical,P=Palette,C=Multicolor), l=layers
+const SYMBOLS = [
+  // Communication
+  {n:"phone",c:"Communication",v:13,m:["M"],l:1},
+  {n:"phone.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"phone.arrow.up.right",c:"Communication",v:13,m:["M","H"],l:2},
+  {n:"phone.arrow.down.left",c:"Communication",v:13,m:["M","H"],l:2},
+  {n:"phone.badge.plus",c:"Communication",v:13,m:["M","H","P"],l:2},
+  {n:"phone.down",c:"Communication",v:13,m:["M"],l:1},
+  {n:"phone.down.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"message",c:"Communication",v:13,m:["M"],l:1},
+  {n:"message.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"message.badge",c:"Communication",v:15,m:["M","H","P"],l:2},
+  {n:"bubble.left",c:"Communication",v:13,m:["M"],l:1},
+  {n:"bubble.right",c:"Communication",v:13,m:["M"],l:1},
+  {n:"bubble.left.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"bubble.right.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"envelope",c:"Communication",v:13,m:["M"],l:1},
+  {n:"envelope.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"envelope.open",c:"Communication",v:13,m:["M"],l:1},
+  {n:"envelope.open.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"envelope.badge",c:"Communication",v:13,m:["M","H","P"],l:2},
+  {n:"paperplane",c:"Communication",v:13,m:["M"],l:1},
+  {n:"paperplane.fill",c:"Communication",v:13,m:["M"],l:1},
+  {n:"tray",c:"Communication",v:13,m:["M"],l:1},
+  {n:"tray.fill",c:"Communication",v:13,m:["M"],l:1},
+
+  // Human
+  {n:"person",c:"Human",v:13,m:["M"],l:1},
+  {n:"person.fill",c:"Human",v:13,m:["M"],l:1},
+  {n:"person.circle",c:"Human",v:13,m:["M","H","P"],l:2},
+  {n:"person.circle.fill",c:"Human",v:13,m:["M","H","P"],l:2},
+  {n:"person.badge.plus",c:"Human",v:13,m:["M","H","P"],l:2},
+  {n:"person.badge.minus",c:"Human",v:13,m:["M","H","P"],l:2},
+  {n:"person.2",c:"Human",v:13,m:["M"],l:1},
+  {n:"person.2.fill",c:"Human",v:13,m:["M"],l:1},
+  {n:"person.3",c:"Human",v:14,m:["M"],l:1},
+  {n:"person.3.fill",c:"Human",v:14,m:["M"],l:1},
+  {n:"person.crop.circle",c:"Human",v:13,m:["M","H","P"],l:2},
+  {n:"person.crop.circle.fill",c:"Human",v:13,m:["M","H","P"],l:2},
+  {n:"person.crop.square",c:"Human",v:13,m:["M"],l:1},
+  {n:"figure.walk",c:"Human",v:14,m:["M"],l:1},
+  {n:"figure.stand",c:"Human",v:14,m:["M"],l:1},
+  {n:"figure.run",c:"Human",v:16,m:["M"],l:1},
+  {n:"figure.wave",c:"Human",v:14,m:["M"],l:1},
+  {n:"figure.hiking",c:"Human",v:16,m:["M"],l:1},
+
+  // Navigation
+  {n:"house",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"house.fill",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"house.circle",c:"Navigation",v:15,m:["M","H","P"],l:2},
+  {n:"magnifyingglass",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"magnifyingglass.circle",c:"Navigation",v:13,m:["M","H","P"],l:2},
+  {n:"magnifyingglass.circle.fill",c:"Navigation",v:13,m:["M","H","P"],l:2},
+  {n:"gear",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"gearshape",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"gearshape.fill",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"gearshape.2",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"ellipsis",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"ellipsis.circle",c:"Navigation",v:13,m:["M","H","P"],l:2},
+  {n:"ellipsis.circle.fill",c:"Navigation",v:13,m:["M","H","P"],l:2},
+  {n:"line.3.horizontal",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"line.3.horizontal.decrease",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"slider.horizontal.3",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"sidebar.left",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"sidebar.right",c:"Navigation",v:14,m:["M"],l:1},
+  {n:"square.grid.2x2",c:"Navigation",v:13,m:["M"],l:1},
+  {n:"square.grid.3x3",c:"Navigation",v:13,m:["M"],l:1},
+
+  // Notifications
+  {n:"bell",c:"Notifications",v:13,m:["M"],l:1},
+  {n:"bell.fill",c:"Notifications",v:13,m:["M"],l:1},
+  {n:"bell.circle",c:"Notifications",v:13,m:["M","H","P"],l:2},
+  {n:"bell.circle.fill",c:"Notifications",v:13,m:["M","H","P"],l:2},
+  {n:"bell.slash",c:"Notifications",v:13,m:["M"],l:1},
+  {n:"bell.slash.fill",c:"Notifications",v:13,m:["M"],l:1},
+  {n:"bell.badge",c:"Notifications",v:15,m:["M","H","P","C"],l:2},
+  {n:"bell.badge.fill",c:"Notifications",v:15,m:["M","H","P","C"],l:2},
+
+  // Favorites
+  {n:"star",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"star.fill",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"star.circle",c:"Favorites",v:13,m:["M","H","P"],l:2},
+  {n:"star.circle.fill",c:"Favorites",v:13,m:["M","H","P"],l:2},
+  {n:"heart",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"heart.fill",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"heart.circle",c:"Favorites",v:13,m:["M","H","P"],l:2},
+  {n:"heart.circle.fill",c:"Favorites",v:13,m:["M","H","P"],l:2},
+  {n:"bookmark",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"bookmark.fill",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"bookmark.circle",c:"Favorites",v:14,m:["M","H","P"],l:2},
+  {n:"bookmark.circle.fill",c:"Favorites",v:14,m:["M","H","P"],l:2},
+  {n:"flag",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"flag.fill",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"flag.circle",c:"Favorites",v:15,m:["M","H","P"],l:2},
+  {n:"tag",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"tag.fill",c:"Favorites",v:13,m:["M"],l:1},
+  {n:"tag.circle",c:"Favorites",v:14,m:["M","H","P"],l:2},
+
+  // Arrows
+  {n:"arrow.up",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.down",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.left",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.right",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.up.left",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.up.right",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.down.left",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.down.right",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.clockwise",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.counterclockwise",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.2.circlepath",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.triangle.2.circlepath",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"arrow.up.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"arrow.down.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"arrow.left.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"arrow.right.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"chevron.up",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"chevron.down",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"chevron.left",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"chevron.right",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"chevron.up.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"chevron.down.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"chevron.left.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"chevron.right.circle",c:"Arrows",v:13,m:["M","H","P"],l:2},
+  {n:"chevron.backward",c:"Arrows",v:15,m:["M"],l:1},
+  {n:"chevron.forward",c:"Arrows",v:15,m:["M"],l:1},
+  {n:"return",c:"Arrows",v:13,m:["M"],l:1},
+  {n:"escape",c:"Arrows",v:13,m:["M"],l:1},
+
+  // Actions
+  {n:"plus",c:"Actions",v:13,m:["M"],l:1},
+  {n:"plus.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"plus.circle.fill",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"plus.square",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"minus",c:"Actions",v:13,m:["M"],l:1},
+  {n:"minus.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"minus.circle.fill",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"xmark",c:"Actions",v:13,m:["M"],l:1},
+  {n:"xmark.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"xmark.circle.fill",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"checkmark",c:"Actions",v:13,m:["M"],l:1},
+  {n:"checkmark.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"checkmark.circle.fill",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"checkmark.square",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"info",c:"Actions",v:13,m:["M"],l:1},
+  {n:"info.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"info.circle.fill",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"questionmark",c:"Actions",v:13,m:["M"],l:1},
+  {n:"questionmark.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"exclamationmark",c:"Actions",v:13,m:["M"],l:1},
+  {n:"exclamationmark.circle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"exclamationmark.triangle",c:"Actions",v:13,m:["M","H","P"],l:2},
+  {n:"exclamationmark.triangle.fill",c:"Actions",v:13,m:["M","H","P"],l:2},
+
+  // Media
+  {n:"play",c:"Media",v:13,m:["M"],l:1},
+  {n:"play.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"play.circle",c:"Media",v:13,m:["M","H","P"],l:2},
+  {n:"play.circle.fill",c:"Media",v:13,m:["M","H","P"],l:2},
+  {n:"pause",c:"Media",v:13,m:["M"],l:1},
+  {n:"pause.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"pause.circle",c:"Media",v:13,m:["M","H","P"],l:2},
+  {n:"stop",c:"Media",v:13,m:["M"],l:1},
+  {n:"stop.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"forward",c:"Media",v:13,m:["M"],l:1},
+  {n:"forward.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"backward",c:"Media",v:13,m:["M"],l:1},
+  {n:"backward.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"speaker",c:"Media",v:13,m:["M"],l:1},
+  {n:"speaker.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"speaker.slash",c:"Media",v:13,m:["M"],l:1},
+  {n:"speaker.slash.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"speaker.wave.1",c:"Media",v:13,m:["M","H","P"],l:2},
+  {n:"speaker.wave.2",c:"Media",v:13,m:["M","H","P"],l:2},
+  {n:"speaker.wave.3",c:"Media",v:13,m:["M","H","P"],l:3},
+  {n:"music.note",c:"Media",v:13,m:["M"],l:1},
+  {n:"music.note.list",c:"Media",v:13,m:["M"],l:1},
+  {n:"music.quarternote.3",c:"Media",v:14,m:["M"],l:1},
+  {n:"headphones",c:"Media",v:13,m:["M"],l:1},
+  {n:"headphones.circle",c:"Media",v:14,m:["M","H","P"],l:2},
+  {n:"mic",c:"Media",v:13,m:["M"],l:1},
+  {n:"mic.fill",c:"Media",v:13,m:["M"],l:1},
+  {n:"mic.slash",c:"Media",v:13,m:["M"],l:1},
+  {n:"mic.circle",c:"Media",v:13,m:["M","H","P"],l:2},
+  {n:"shuffle",c:"Media",v:13,m:["M"],l:1},
+  {n:"repeat",c:"Media",v:13,m:["M"],l:1},
+  {n:"repeat.1",c:"Media",v:13,m:["M"],l:1},
+
+  // Camera & Photos
+  {n:"camera",c:"Camera",v:13,m:["M"],l:1},
+  {n:"camera.fill",c:"Camera",v:13,m:["M"],l:1},
+  {n:"camera.circle",c:"Camera",v:13,m:["M","H","P"],l:2},
+  {n:"camera.rotate",c:"Camera",v:14,m:["M"],l:1},
+  {n:"photo",c:"Camera",v:13,m:["M"],l:1},
+  {n:"photo.fill",c:"Camera",v:13,m:["M"],l:1},
+  {n:"photo.on.rectangle",c:"Camera",v:13,m:["M","H","P"],l:2},
+  {n:"photo.stack",c:"Camera",v:16,m:["M","H","P"],l:2},
+  {n:"photo.badge.plus",c:"Camera",v:16,m:["M","H","P"],l:2},
+  {n:"video",c:"Camera",v:13,m:["M"],l:1},
+  {n:"video.fill",c:"Camera",v:13,m:["M"],l:1},
+  {n:"video.slash",c:"Camera",v:13,m:["M"],l:1},
+  {n:"video.badge.plus",c:"Camera",v:14,m:["M","H","P"],l:2},
+  {n:"film",c:"Camera",v:13,m:["M"],l:1},
+  {n:"film.fill",c:"Camera",v:13,m:["M"],l:1},
+
+  // Maps & Location
+  {n:"map",c:"Maps",v:13,m:["M"],l:1},
+  {n:"map.fill",c:"Maps",v:13,m:["M"],l:1},
+  {n:"location",c:"Maps",v:13,m:["M"],l:1},
+  {n:"location.fill",c:"Maps",v:13,m:["M"],l:1},
+  {n:"location.slash",c:"Maps",v:13,m:["M"],l:1},
+  {n:"location.circle",c:"Maps",v:13,m:["M","H","P"],l:2},
+  {n:"location.circle.fill",c:"Maps",v:13,m:["M","H","P"],l:2},
+  {n:"mappin",c:"Maps",v:13,m:["M"],l:1},
+  {n:"mappin.circle",c:"Maps",v:13,m:["M","H","P"],l:2},
+  {n:"mappin.circle.fill",c:"Maps",v:13,m:["M","H","P"],l:2},
+  {n:"globe",c:"Maps",v:13,m:["M"],l:1},
+  {n:"globe.americas",c:"Maps",v:15,m:["M"],l:1},
+  {n:"globe.europe.africa",c:"Maps",v:15,m:["M"],l:1},
+  {n:"globe.asia.australia",c:"Maps",v:15,m:["M"],l:1},
+  {n:"globe.badge.chevron.backward",c:"Maps",v:15,m:["M","H","P"],l:2},
+
+  // Weather
+  {n:"sun.max",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"sun.max.fill",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"sun.min",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"sunset",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"moon",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"moon.fill",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"moon.stars",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"cloud",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"cloud.fill",c:"Weather",v:13,m:["M","C"],l:1},
+  {n:"cloud.rain",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"cloud.rain.fill",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"cloud.snow",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"cloud.snow.fill",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"cloud.bolt",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"cloud.bolt.fill",c:"Weather",v:13,m:["M","H","P","C"],l:2},
+  {n:"wind",c:"Weather",v:13,m:["M"],l:1},
+  {n:"thermometer.medium",c:"Weather",v:15,m:["M","H","P","C"],l:2},
+  {n:"snowflake",c:"Weather",v:14,m:["M","C"],l:1},
+  {n:"humidity",c:"Weather",v:16,m:["M","H","P"],l:2},
+  {n:"tornado",c:"Weather",v:13,m:["M"],l:1},
+
+  // Devices
+  {n:"iphone",c:"Devices",v:13,m:["M"],l:1},
+  {n:"iphone.gen3",c:"Devices",v:17,m:["M"],l:1},
+  {n:"ipad",c:"Devices",v:14,m:["M"],l:1},
+  {n:"ipad.landscape",c:"Devices",v:14,m:["M"],l:1},
+  {n:"mac",c:"Devices",v:16,m:["M"],l:1},
+  {n:"macbook",c:"Devices",v:16,m:["M"],l:1},
+  {n:"applewatch",c:"Devices",v:13,m:["M"],l:1},
+  {n:"airpods",c:"Devices",v:14,m:["M"],l:1},
+  {n:"airpodspro",c:"Devices",v:14,m:["M"],l:1},
+  {n:"homepod",c:"Devices",v:14,m:["M"],l:1},
+  {n:"keyboard",c:"Devices",v:13,m:["M"],l:1},
+  {n:"mouse",c:"Devices",v:14,m:["M"],l:1},
+  {n:"display",c:"Devices",v:14,m:["M"],l:1},
+  {n:"printer",c:"Devices",v:13,m:["M"],l:1},
+  {n:"externaldrive",c:"Devices",v:14,m:["M"],l:1},
+  {n:"externaldrive.fill",c:"Devices",v:14,m:["M"],l:1},
+  {n:"server.rack",c:"Devices",v:14,m:["M"],l:1},
+
+  // Files & Documents
+  {n:"folder",c:"Files",v:13,m:["M"],l:1},
+  {n:"folder.fill",c:"Files",v:13,m:["M"],l:1},
+  {n:"folder.circle",c:"Files",v:13,m:["M","H","P"],l:2},
+  {n:"folder.badge.plus",c:"Files",v:13,m:["M","H","P"],l:2},
+  {n:"doc",c:"Files",v:13,m:["M"],l:1},
+  {n:"doc.fill",c:"Files",v:13,m:["M"],l:1},
+  {n:"doc.text",c:"Files",v:13,m:["M"],l:1},
+  {n:"doc.text.fill",c:"Files",v:13,m:["M"],l:1},
+  {n:"doc.richtext",c:"Files",v:13,m:["M"],l:1},
+  {n:"doc.badge.plus",c:"Files",v:13,m:["M","H","P"],l:2},
+  {n:"paperclip",c:"Files",v:13,m:["M"],l:1},
+  {n:"link",c:"Files",v:13,m:["M"],l:1},
+  {n:"trash",c:"Files",v:13,m:["M"],l:1},
+  {n:"trash.fill",c:"Files",v:13,m:["M"],l:1},
+  {n:"archivebox",c:"Files",v:13,m:["M"],l:1},
+  {n:"archivebox.fill",c:"Files",v:13,m:["M"],l:1},
+  {n:"square.and.arrow.up",c:"Files",v:13,m:["M"],l:1},
+  {n:"square.and.arrow.down",c:"Files",v:13,m:["M"],l:1},
+  {n:"arrow.down.circle",c:"Files",v:13,m:["M","H","P"],l:2},
+  {n:"arrow.down.circle.fill",c:"Files",v:13,m:["M","H","P"],l:2},
+  {n:"icloud",c:"Files",v:13,m:["M"],l:1},
+  {n:"icloud.fill",c:"Files",v:13,m:["M"],l:1},
+  {n:"icloud.and.arrow.up",c:"Files",v:13,m:["M","H","P"],l:2},
+  {n:"icloud.and.arrow.down",c:"Files",v:13,m:["M","H","P"],l:2},
+
+  // Security
+  {n:"lock",c:"Security",v:13,m:["M"],l:1},
+  {n:"lock.fill",c:"Security",v:13,m:["M"],l:1},
+  {n:"lock.open",c:"Security",v:13,m:["M"],l:1},
+  {n:"lock.open.fill",c:"Security",v:13,m:["M"],l:1},
+  {n:"lock.circle",c:"Security",v:13,m:["M","H","P"],l:2},
+  {n:"lock.circle.fill",c:"Security",v:13,m:["M","H","P"],l:2},
+  {n:"key",c:"Security",v:14,m:["M"],l:1},
+  {n:"key.fill",c:"Security",v:14,m:["M"],l:1},
+  {n:"shield",c:"Security",v:13,m:["M"],l:1},
+  {n:"shield.fill",c:"Security",v:13,m:["M"],l:1},
+  {n:"checkmark.shield",c:"Security",v:13,m:["M","H","P"],l:2},
+  {n:"checkmark.shield.fill",c:"Security",v:13,m:["M","H","P"],l:2},
+  {n:"xmark.shield",c:"Security",v:14,m:["M","H","P"],l:2},
+  {n:"exclamationmark.shield",c:"Security",v:14,m:["M","H","P"],l:2},
+  {n:"faceid",c:"Security",v:13,m:["M"],l:1},
+  {n:"touchid",c:"Security",v:14,m:["M"],l:1},
+  {n:"eye",c:"Security",v:13,m:["M"],l:1},
+  {n:"eye.fill",c:"Security",v:13,m:["M"],l:1},
+  {n:"eye.slash",c:"Security",v:13,m:["M"],l:1},
+  {n:"eye.slash.fill",c:"Security",v:13,m:["M"],l:1},
+
+  // Health
+  {n:"heart.pulse",c:"Health",v:15,m:["M"],l:1},
+  {n:"heart.pulse.fill",c:"Health",v:15,m:["M"],l:1},
+  {n:"cross",c:"Health",v:13,m:["M"],l:1},
+  {n:"cross.fill",c:"Health",v:13,m:["M"],l:1},
+  {n:"cross.circle",c:"Health",v:13,m:["M","H","P"],l:2},
+  {n:"cross.circle.fill",c:"Health",v:13,m:["M","H","P"],l:2},
+  {n:"pills",c:"Health",v:14,m:["M"],l:1},
+  {n:"pills.fill",c:"Health",v:14,m:["M"],l:1},
+  {n:"stethoscope",c:"Health",v:14,m:["M"],l:1},
+  {n:"bandage",c:"Health",v:14,m:["M"],l:1},
+  {n:"bandage.fill",c:"Health",v:14,m:["M"],l:1},
+  {n:"waveform.path.ecg",c:"Health",v:13,m:["M"],l:1},
+  {n:"lungs",c:"Health",v:14,m:["M"],l:1},
+  {n:"brain.head.profile",c:"Health",v:14,m:["M"],l:1},
+  {n:"figure.mind.and.body",c:"Health",v:16,m:["M"],l:1},
+
+  // Finance
+  {n:"creditcard",c:"Finance",v:13,m:["M"],l:1},
+  {n:"creditcard.fill",c:"Finance",v:13,m:["M"],l:1},
+  {n:"banknote",c:"Finance",v:15,m:["M"],l:1},
+  {n:"banknote.fill",c:"Finance",v:15,m:["M"],l:1},
+  {n:"cart",c:"Finance",v:13,m:["M"],l:1},
+  {n:"cart.fill",c:"Finance",v:13,m:["M"],l:1},
+  {n:"cart.badge.plus",c:"Finance",v:13,m:["M","H","P"],l:2},
+  {n:"bag",c:"Finance",v:13,m:["M"],l:1},
+  {n:"bag.fill",c:"Finance",v:13,m:["M"],l:1},
+  {n:"gift",c:"Finance",v:13,m:["M"],l:1},
+  {n:"gift.fill",c:"Finance",v:13,m:["M"],l:1},
+  {n:"dollarsign.circle",c:"Finance",v:13,m:["M","H","P"],l:2},
+  {n:"dollarsign.circle.fill",c:"Finance",v:13,m:["M","H","P"],l:2},
+
+  // Editing
+  {n:"pencil",c:"Editing",v:13,m:["M"],l:1},
+  {n:"pencil.circle",c:"Editing",v:13,m:["M","H","P"],l:2},
+  {n:"pencil.circle.fill",c:"Editing",v:13,m:["M","H","P"],l:2},
+  {n:"square.and.pencil",c:"Editing",v:13,m:["M"],l:1},
+  {n:"scribble",c:"Editing",v:13,m:["M"],l:1},
+  {n:"textformat",c:"Editing",v:13,m:["M"],l:1},
+  {n:"bold",c:"Editing",v:13,m:["M"],l:1},
+  {n:"italic",c:"Editing",v:13,m:["M"],l:1},
+  {n:"underline",c:"Editing",v:13,m:["M"],l:1},
+  {n:"strikethrough",c:"Editing",v:13,m:["M"],l:1},
+  {n:"list.bullet",c:"Editing",v:13,m:["M"],l:1},
+  {n:"list.number",c:"Editing",v:13,m:["M"],l:1},
+  {n:"text.alignleft",c:"Editing",v:13,m:["M"],l:1},
+  {n:"text.aligncenter",c:"Editing",v:13,m:["M"],l:1},
+  {n:"scissors",c:"Editing",v:13,m:["M"],l:1},
+  {n:"doc.on.clipboard",c:"Editing",v:13,m:["M"],l:1},
+  {n:"arrow.uturn.backward",c:"Editing",v:13,m:["M"],l:1},
+  {n:"arrow.uturn.forward",c:"Editing",v:13,m:["M"],l:1},
+
+  // Shapes
+  {n:"circle",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"circle.fill",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"square",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"square.fill",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"triangle",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"triangle.fill",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"diamond",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"diamond.fill",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"hexagon",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"hexagon.fill",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"pentagon",c:"Shapes",v:15,m:["M"],l:1},
+  {n:"pentagon.fill",c:"Shapes",v:15,m:["M"],l:1},
+  {n:"seal",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"seal.fill",c:"Shapes",v:13,m:["M"],l:1},
+  {n:"app",c:"Shapes",v:14,m:["M"],l:1},
+  {n:"app.fill",c:"Shapes",v:14,m:["M"],l:1},
+
+  // Nature
+  {n:"leaf",c:"Nature",v:14,m:["M","C"],l:1},
+  {n:"leaf.fill",c:"Nature",v:14,m:["M","C"],l:1},
+  {n:"tree",c:"Nature",v:16,m:["M","C"],l:1},
+  {n:"tree.fill",c:"Nature",v:16,m:["M","C"],l:1},
+  {n:"flame",c:"Nature",v:13,m:["M","H","P","C"],l:2},
+  {n:"flame.fill",c:"Nature",v:13,m:["M","H","P","C"],l:2},
+  {n:"drop",c:"Nature",v:13,m:["M","C"],l:1},
+  {n:"drop.fill",c:"Nature",v:13,m:["M","C"],l:1},
+  {n:"bolt",c:"Nature",v:13,m:["M"],l:1},
+  {n:"bolt.fill",c:"Nature",v:13,m:["M"],l:1},
+  {n:"bolt.circle",c:"Nature",v:13,m:["M","H","P"],l:2},
+  {n:"ant",c:"Nature",v:13,m:["M"],l:1},
+  {n:"hare",c:"Nature",v:13,m:["M"],l:1},
+  {n:"tortoise",c:"Nature",v:13,m:["M"],l:1},
+
+  // Connectivity
+  {n:"wifi",c:"Connectivity",v:13,m:["M"],l:1},
+  {n:"wifi.slash",c:"Connectivity",v:13,m:["M"],l:1},
+  {n:"wifi.circle",c:"Connectivity",v:16,m:["M","H","P"],l:2},
+  {n:"wifi.circle.fill",c:"Connectivity",v:16,m:["M","H","P"],l:2},
+  {n:"antenna.radiowaves.left.and.right",c:"Connectivity",v:13,m:["M"],l:1},
+  {n:"network",c:"Connectivity",v:15,m:["M"],l:1},
+  {n:"personalhotspot",c:"Connectivity",v:13,m:["M"],l:1},
+  {n:"bluetooth",c:"Connectivity",v:13,m:["M"],l:1},
+  {n:"dot.radiowaves.left.and.right",c:"Connectivity",v:13,m:["M"],l:1},
+  {n:"airdrop",c:"Connectivity",v:16,m:["M"],l:1},
+
+  // Sharing
+  {n:"arrowshape.turn.up.left",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"arrowshape.turn.up.left.fill",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"arrowshape.turn.up.right",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"arrowshape.turn.up.right.fill",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"square.and.arrow.up",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"square.and.arrow.up.fill",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"paperplane",c:"Sharing",v:13,m:["M"],l:1},
+  {n:"link.badge.plus",c:"Sharing",v:14,m:["M","H","P"],l:2},
+];
+
+// ── Glyph map (emoji / Unicode approximations) ────────────────
+const GLYPH = {
+  // Communication
+  "phone":"📞","phone.fill":"📞","phone.arrow.up.right":"📲","phone.arrow.down.left":"📲",
+  "phone.badge.plus":"📲","phone.down":"📵","phone.down.fill":"📵",
+  "message":"💬","message.fill":"💬","message.badge":"💬",
+  "bubble.left":"🗨","bubble.right":"💭","bubble.left.fill":"🗨","bubble.right.fill":"💭",
+  "envelope":"✉️","envelope.fill":"✉️","envelope.open":"📨","envelope.open.fill":"📨",
+  "envelope.badge":"📩","paperplane":"📤","paperplane.fill":"📤",
+  "tray":"📥","tray.fill":"📥",
+  // Human
+  "person":"👤","person.fill":"👤","person.circle":"👤","person.circle.fill":"👤",
+  "person.badge.plus":"👤","person.badge.minus":"👤",
+  "person.2":"👥","person.2.fill":"👥","person.3":"👨‍👩‍👦","person.3.fill":"👨‍👩‍👦",
+  "person.crop.circle":"👤","person.crop.circle.fill":"👤","person.crop.square":"👤",
+  "figure.walk":"🚶","figure.stand":"🧍","figure.run":"🏃","figure.wave":"🙋","figure.hiking":"🧗",
+  // Navigation
+  "house":"🏠","house.fill":"🏠","house.circle":"🏠",
+  "magnifyingglass":"🔍","magnifyingglass.circle":"🔍","magnifyingglass.circle.fill":"🔍",
+  "gear":"⚙️","gearshape":"⚙️","gearshape.fill":"⚙️","gearshape.2":"⚙️",
+  "ellipsis":"…","ellipsis.circle":"⊙","ellipsis.circle.fill":"⊙",
+  "line.3.horizontal":"☰","line.3.horizontal.decrease":"☰","slider.horizontal.3":"🎚",
+  "sidebar.left":"◧","sidebar.right":"◨","square.grid.2x2":"▦","square.grid.3x3":"▦",
+  // Notifications
+  "bell":"🔔","bell.fill":"🔔","bell.circle":"🔔","bell.circle.fill":"🔔",
+  "bell.slash":"🔕","bell.slash.fill":"🔕","bell.badge":"🔔","bell.badge.fill":"🔔",
+  // Favorites
+  "star":"⭐","star.fill":"⭐","star.circle":"⭐","star.circle.fill":"⭐",
+  "heart":"♥","heart.fill":"❤️","heart.circle":"❤️","heart.circle.fill":"❤️",
+  "bookmark":"🔖","bookmark.fill":"🔖","bookmark.circle":"🔖","bookmark.circle.fill":"🔖",
+  "flag":"🚩","flag.fill":"🚩","flag.circle":"🚩","tag":"🏷","tag.fill":"🏷","tag.circle":"🏷",
+  // Arrows
+  "arrow.up":"↑","arrow.down":"↓","arrow.left":"←","arrow.right":"→",
+  "arrow.up.left":"↖","arrow.up.right":"↗","arrow.down.left":"↙","arrow.down.right":"↘",
+  "arrow.clockwise":"↻","arrow.counterclockwise":"↺","arrow.2.circlepath":"⇄","arrow.triangle.2.circlepath":"⇄",
+  "arrow.up.circle":"⬆","arrow.down.circle":"⬇","arrow.left.circle":"⬅","arrow.right.circle":"➡",
+  "chevron.up":"⌃","chevron.down":"⌄","chevron.left":"‹","chevron.right":"›",
+  "chevron.up.circle":"⌃","chevron.down.circle":"⌄","chevron.left.circle":"‹","chevron.right.circle":"›",
+  "chevron.backward":"«","chevron.forward":"»","return":"↩","escape":"⎋",
+  // Actions
+  "plus":"+","plus.circle":"⊕","plus.circle.fill":"⊕","plus.square":"⊕",
+  "minus":"−","minus.circle":"⊖","minus.circle.fill":"⊖",
+  "xmark":"✕","xmark.circle":"✕","xmark.circle.fill":"✕",
+  "checkmark":"✓","checkmark.circle":"✓","checkmark.circle.fill":"✓","checkmark.square":"✓",
+  "info":"ℹ","info.circle":"ℹ","info.circle.fill":"ℹ",
+  "questionmark":"?","questionmark.circle":"?",
+  "exclamationmark":"!","exclamationmark.circle":"!",
+  "exclamationmark.triangle":"⚠️","exclamationmark.triangle.fill":"⚠️",
+  // Media
+  "play":"▶","play.fill":"▶","play.circle":"▶","play.circle.fill":"▶",
+  "pause":"⏸","pause.fill":"⏸","pause.circle":"⏸",
+  "stop":"⏹","stop.fill":"⏹",
+  "forward":"⏩","forward.fill":"⏩","backward":"⏪","backward.fill":"⏪",
+  "speaker":"🔈","speaker.fill":"🔊","speaker.slash":"🔇","speaker.slash.fill":"🔇",
+  "speaker.wave.1":"🔉","speaker.wave.2":"🔊","speaker.wave.3":"🔊",
+  "music.note":"🎵","music.note.list":"🎶","music.quarternote.3":"🎵",
+  "headphones":"🎧","headphones.circle":"🎧",
+  "mic":"🎤","mic.fill":"🎤","mic.slash":"🔇","mic.circle":"🎤",
+  "shuffle":"🔀","repeat":"🔁","repeat.1":"🔂",
+  // Camera
+  "camera":"📷","camera.fill":"📷","camera.circle":"📷","camera.rotate":"🔄",
+  "photo":"🖼","photo.fill":"🖼","photo.on.rectangle":"🖼","photo.stack":"🖼",
+  "photo.badge.plus":"🖼","video":"🎥","video.fill":"🎥","video.slash":"🚫",
+  "video.badge.plus":"🎥","film":"🎞","film.fill":"🎞",
+  // Maps
+  "map":"🗺","map.fill":"🗺","location":"📍","location.fill":"📍",
+  "location.slash":"📍","location.circle":"📍","location.circle.fill":"📍",
+  "mappin":"📌","mappin.circle":"📌","mappin.circle.fill":"📌",
+  "globe":"🌐","globe.americas":"🌎","globe.europe.africa":"🌍","globe.asia.australia":"🌏",
+  "globe.badge.chevron.backward":"🌐",
+  // Weather
+  "sun.max":"☀️","sun.max.fill":"☀️","sun.min":"🌤","sunset":"🌅",
+  "moon":"🌙","moon.fill":"🌙","moon.stars":"🌟",
+  "cloud":"☁️","cloud.fill":"☁️","cloud.rain":"🌧","cloud.rain.fill":"🌧",
+  "cloud.snow":"🌨","cloud.snow.fill":"🌨","cloud.bolt":"⛈","cloud.bolt.fill":"⛈",
+  "wind":"💨","thermometer.medium":"🌡","snowflake":"❄️","humidity":"💧","tornado":"🌪",
+  // Devices
+  "iphone":"📱","iphone.gen3":"📱","ipad":"📱","ipad.landscape":"📱",
+  "mac":"🖥","macbook":"💻","applewatch":"⌚","airpods":"🎧","airpodspro":"🎧",
+  "homepod":"🔊","keyboard":"⌨️","mouse":"🖱","display":"🖥","printer":"🖨",
+  "externaldrive":"💾","externaldrive.fill":"💾","server.rack":"🖥",
+  // Files
+  "folder":"📁","folder.fill":"📂","folder.circle":"📁","folder.badge.plus":"📁",
+  "doc":"📄","doc.fill":"📄","doc.text":"📄","doc.text.fill":"📄","doc.richtext":"📄",
+  "doc.badge.plus":"📄","paperclip":"📎","link":"🔗","trash":"🗑","trash.fill":"🗑",
+  "archivebox":"📦","archivebox.fill":"📦","square.and.arrow.up":"⬆","square.and.arrow.down":"⬇",
+  "arrow.down.circle":"⬇","arrow.down.circle.fill":"⬇",
+  "icloud":"☁️","icloud.fill":"☁️","icloud.and.arrow.up":"☁️","icloud.and.arrow.down":"☁️",
+  // Security
+  "lock":"🔒","lock.fill":"🔒","lock.open":"🔓","lock.open.fill":"🔓",
+  "lock.circle":"🔒","lock.circle.fill":"🔒","key":"🔑","key.fill":"🔑",
+  "shield":"🛡","shield.fill":"🛡","checkmark.shield":"🛡","checkmark.shield.fill":"🛡",
+  "xmark.shield":"🛡","exclamationmark.shield":"🛡","faceid":"🆔","touchid":"👆",
+  "eye":"👁","eye.fill":"👁","eye.slash":"🙈","eye.slash.fill":"🙈",
+  // Health
+  "heart.pulse":"💓","heart.pulse.fill":"💓","cross":"✚","cross.fill":"✚",
+  "cross.circle":"⊕","cross.circle.fill":"⊕","pills":"💊","pills.fill":"💊",
+  "stethoscope":"🩺","bandage":"🩹","bandage.fill":"🩹","waveform.path.ecg":"📈",
+  "lungs":"🫁","brain.head.profile":"🧠","figure.mind.and.body":"🧘",
+  // Finance
+  "creditcard":"💳","creditcard.fill":"💳","banknote":"💵","banknote.fill":"💵",
+  "cart":"🛒","cart.fill":"🛒","cart.badge.plus":"🛒","bag":"👜","bag.fill":"👜",
+  "gift":"🎁","gift.fill":"🎁","dollarsign.circle":"💰","dollarsign.circle.fill":"💰",
+  // Editing
+  "pencil":"✏️","pencil.circle":"✏️","pencil.circle.fill":"✏️","square.and.pencil":"✏️",
+  "scribble":"✍️","textformat":"T","bold":"B","italic":"I","underline":"U","strikethrough":"S̶",
+  "list.bullet":"•","list.number":"1","text.alignleft":"≡","text.aligncenter":"≡",
+  "scissors":"✂️","doc.on.clipboard":"📋","arrow.uturn.backward":"↩","arrow.uturn.forward":"↪",
+  // Shapes
+  "circle":"○","circle.fill":"●","square":"□","square.fill":"■",
+  "triangle":"△","triangle.fill":"▲","diamond":"◇","diamond.fill":"◆",
+  "hexagon":"⬡","hexagon.fill":"⬢","pentagon":"⬠","pentagon.fill":"⬠",
+  "seal":"◉","seal.fill":"◉","app":"▢","app.fill":"▣",
+  // Nature
+  "leaf":"🍃","leaf.fill":"🍃","tree":"🌲","tree.fill":"🌲",
+  "flame":"🔥","flame.fill":"🔥","drop":"💧","drop.fill":"💧",
+  "bolt":"⚡","bolt.fill":"⚡","bolt.circle":"⚡","ant":"🐜","hare":"🐰","tortoise":"🐢",
+  // Connectivity
+  "wifi":"📶","wifi.slash":"📵","wifi.circle":"📶","wifi.circle.fill":"📶",
+  "antenna.radiowaves.left.and.right":"📡","network":"🌐","personalhotspot":"📡",
+  "bluetooth":"🔵","dot.radiowaves.left.and.right":"📡","airdrop":"📡",
+  // Sharing
+  "arrowshape.turn.up.left":"↩","arrowshape.turn.up.left.fill":"↩",
+  "arrowshape.turn.up.right":"↪","arrowshape.turn.up.right.fill":"↪",
+  "link.badge.plus":"🔗",
+};
+
+function getGlyph(name) { return GLYPH[name] || null; }
+
+// ── State ─────────────────────────────────────────────────────
+const COLORS = [
+  { name: 'blue',   hex: '#3b82f6', swift: '.blue' },
+  { name: 'green',  hex: '#22c55e', swift: '.green' },
+  { name: 'red',    hex: '#ef4444', swift: '.red' },
+  { name: 'orange', hex: '#f97316', swift: '.orange' },
+  { name: 'purple', hex: '#a855f7', swift: '.purple' },
+  { name: 'cyan',   hex: '#06b6d4', swift: '.cyan' },
+  { name: 'primary',hex: '#e8f0ff', swift: '.primary' },
+];
+const MODE_LABELS = { M: 'Monochrome', H: 'Hierarchical', P: 'Palette', C: 'Multicolor' };
+
+let selectedSymbol = null;
+let activeCategory = 'All';
+let activeIOS = 0;
+let activeTab = 'swiftui';
+let opts = { size: 24, weight: 'regular', mode: 'M', colorIdx: 0 };
+
+// ── DOM refs ──────────────────────────────────────────────────
+const sfSearch    = document.getElementById('sfSearch');
+const sfGrid      = document.getElementById('sfGrid');
+const sfCount     = document.getElementById('sfCount');
+const catPills    = document.getElementById('catPills');
+const sfDetailEmpty   = document.getElementById('sfDetailEmpty');
+const sfDetailContent = document.getElementById('sfDetailContent');
+const dPreview    = document.getElementById('dPreview');
+const dName       = document.getElementById('dName');
+const dCopyName   = document.getElementById('dCopyName');
+const dAvail      = document.getElementById('dAvail');
+const dLayers     = document.getElementById('dLayers');
+const dModes      = document.getElementById('dModes');
+const dModeSelect = document.getElementById('dModeSelect');
+const sizeSlider  = document.getElementById('sizeSlider');
+const sizeVal     = document.getElementById('sizeVal');
+const weightSelect= document.getElementById('weightSelect');
+const colorSwatches = document.getElementById('colorSwatches');
+const sfCodeOut   = document.getElementById('sfCodeOut');
+const sfCodeCopy  = document.getElementById('sfCodeCopy');
+
+// ── Build category pills ──────────────────────────────────────
+const cats = ['All', ...new Set(SYMBOLS.map(s => s.c))];
+cats.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'sf-pill' + (cat === 'All' ? ' active' : '');
+  btn.textContent = cat;
+  btn.addEventListener('click', () => {
+    activeCategory = cat;
+    catPills.querySelectorAll('.sf-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid();
+  });
+  catPills.appendChild(btn);
+});
+
+// ── Build color swatches ──────────────────────────────────────
+COLORS.forEach((col, i) => {
+  const s = document.createElement('div');
+  s.className = 'sf-swatch' + (i === 0 ? ' active' : '');
+  s.style.background = col.hex;
+  s.title = col.name;
+  s.addEventListener('click', () => {
+    colorSwatches.querySelectorAll('.sf-swatch').forEach(sw => sw.classList.remove('active'));
+    s.classList.add('active');
+    opts.colorIdx = i;
+    updateCode();
+  });
+  colorSwatches.appendChild(s);
+});
+
+// ── iOS filter pills ──────────────────────────────────────────
+document.querySelectorAll('[data-ios]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeIOS = parseInt(btn.dataset.ios);
+    document.querySelectorAll('[data-ios]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid();
+  });
+});
+
+// ── Code tabs ─────────────────────────────────────────────────
+document.querySelectorAll('.sf-code-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    activeTab = tab.dataset.tab;
+    document.querySelectorAll('.sf-code-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    updateCode();
+  });
+});
+
+// ── Options controls ──────────────────────────────────────────
+sizeSlider.addEventListener('input', () => {
+  opts.size = parseInt(sizeSlider.value);
+  sizeVal.textContent = opts.size;
+  updateCode();
+});
+weightSelect.addEventListener('change', () => {
+  opts.weight = weightSelect.value;
+  updateCode();
+});
+
+// ── Format symbol name with styled dots ───────────────────────
+function toDisplayName(name) {
+  return name.split('.').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+// ── Render grid ───────────────────────────────────────────────
+function renderGrid() {
+  const q = sfSearch.value.trim().toLowerCase();
+  const filtered = SYMBOLS.filter(s => {
+    if (activeCategory !== 'All' && s.c !== activeCategory) return false;
+    if (activeIOS > 0 && s.v > activeIOS) return false;
+    if (q && !s.n.includes(q) && !s.c.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  sfCount.textContent = `${filtered.length} symbol${filtered.length !== 1 ? 's' : ''}`;
+
+  if (filtered.length === 0) {
+    sfGrid.innerHTML = '<div class="sf-empty-state"><p>No symbols match your search.</p></div>';
+    return;
+  }
+
+  sfGrid.innerHTML = '';
+  filtered.forEach(sym => {
+    const card = document.createElement('div');
+    card.className = 'sf-card' + (selectedSymbol && selectedSymbol.n === sym.n ? ' selected' : '');
+    const glyph = getGlyph(sym.n);
+    card.innerHTML = `
+      <div class="sf-card-preview">${glyph ? `<span style="font-size:28px;line-height:1;display:block;">${glyph}</span>` : `<span style="font-size:.5rem;font-weight:800;letter-spacing:.06em;color:rgba(100,160,255,.5);">SF</span>`}</div>
+      <div class="sf-card-name">${toDisplayName(sym.n)}</div>
+      <span class="sf-card-ios">iOS ${sym.v}+</span>
+    `;
+    card.addEventListener('click', () => selectSymbol(sym));
+    sfGrid.appendChild(card);
+  });
+}
+
+// ── Select symbol ─────────────────────────────────────────────
+function selectSymbol(sym) {
+  selectedSymbol = sym;
+
+  // Update selected state in grid
+  sfGrid.querySelectorAll('.sf-card').forEach(c => c.classList.remove('selected'));
+  sfGrid.querySelectorAll('.sf-card[data-name]').forEach(c => {
+    if (c.dataset.name === sym.n) c.classList.add('selected');
+  });
+
+  sfDetailEmpty.style.display = 'none';
+  sfDetailContent.style.display = 'flex';
+
+  // Hero
+  const heroGlyph = getGlyph(sym.n);
+  if (heroGlyph) {
+    dPreview.innerHTML = `<span style="font-size:38px;line-height:1;display:block;">${heroGlyph}</span>`;
+  } else {
+    const parts = sym.n.split('.');
+    dPreview.innerHTML = `<span style="font-size:.55rem;font-weight:800;letter-spacing:.06em;color:rgba(100,160,255,.6);font-family:-apple-system,sans-serif;">${parts[0].slice(0,3).toUpperCase()}</span>`;
+  }
+
+  dName.innerHTML = `${toDisplayName(sym.n)}<br><span style="font-size:.68rem;font-weight:400;color:rgba(130,165,220,.55);font-family:'SF Mono','Fira Code',monospace;letter-spacing:0;">${sym.n}</span>`;
+
+  // Meta
+  dAvail.textContent = `iOS ${sym.v}+`;
+  dLayers.textContent = `${sym.l} Layer${sym.l !== 1 ? 's' : ''}`;
+
+  dModes.innerHTML = sym.m.map(mode =>
+    `<span class="sf-mode-pill mode-${mode}">${MODE_LABELS[mode]}</span>`
+  ).join('');
+
+  // Mode selector — only show modes the symbol supports
+  opts.mode = sym.m[0]; // reset to first available mode
+  dModeSelect.innerHTML = sym.m.map(mode =>
+    `<button class="sf-mode-select-pill${opts.mode === mode ? ' active' : ''}" data-mode="${mode}">${MODE_LABELS[mode]}</button>`
+  ).join('');
+  dModeSelect.querySelectorAll('.sf-mode-select-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      opts.mode = pill.dataset.mode;
+      dModeSelect.querySelectorAll('.sf-mode-select-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      updateCode();
+    });
+  });
+
+  updateCode();
+}
+
+// ── Code generation ───────────────────────────────────────────
+function genSwiftUI(sym) {
+  const color = COLORS[opts.colorIdx].swift;
+  const weight = opts.weight;
+  const size = opts.size;
+  const modeLower = { M:'monochrome', H:'hierarchical', P:'palette', C:'multicolor' }[opts.mode];
+
+  let lines = [`Image(systemName: "${sym.n}")`];
+
+  if (size !== 24 && weight === 'regular') {
+    lines.push(`    .font(.system(size: ${size}))`);
+  } else if (size !== 24 || weight !== 'regular') {
+    lines.push(`    .font(.system(size: ${size}, weight: .${weight}))`);
+  }
+
+  if (opts.mode !== 'M') {
+    lines.push(`    .symbolRenderingMode(.${modeLower})`);
+  }
+
+  if (opts.mode === 'M' || opts.mode === 'H') {
+    lines.push(`    .foregroundStyle(${color})`);
+  } else if (opts.mode === 'P') {
+    lines.push(`    .foregroundStyle(${color}, ${color}.opacity(0.3))`);
+  } else if (opts.mode === 'C') {
+    // multicolor keeps system colors
+    lines.push(`    .symbolRenderingMode(.multicolor)`);
+  }
+
+  return lines.join('\n');
+}
+
+function genUIKit(sym) {
+  const weight = opts.weight;
+  const size = opts.size;
+  const uiWeight = weight === 'ultraLight' ? 'ultraLight' : weight;
+
+  return [
+    `let config = UIImage.SymbolConfiguration(`,
+    `    pointSize: ${size},`,
+    `    weight: .${uiWeight},`,
+    `    scale: .default`,
+    `)`,
+    `let image = UIImage(`,
+    `    systemName: "${sym.n}",`,
+    `    withConfiguration: config`,
+    `)`,
+  ].join('\n');
+}
+
+function highlight(code) {
+  return code
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/(\/\/[^\n]*)/g,'<span class="cm">$1</span>')
+    .replace(/"([^"]*)"/g,'<span class="str">"$1"</span>')
+    .replace(/\b(let|var|Image|UIImage|UIImage\.SymbolConfiguration|systemName|withConfiguration|font|system|foregroundStyle|symbolRenderingMode|weight|pointSize|scale)\b/g,'<span class="kw">$1</span>')
+    .replace(/\b([0-9]+)\b/g,'<span class="num">$1</span>')
+    .replace(/(\.[a-z][a-zA-Z0-9]*)/g,'<span class="dot">$1</span>');
+}
+
+let rawCode = '';
+function updateCode() {
+  if (!selectedSymbol) return;
+  rawCode = activeTab === 'swiftui' ? genSwiftUI(selectedSymbol) : genUIKit(selectedSymbol);
+  sfCodeOut.innerHTML = highlight(rawCode);
+}
+
+// ── Copy handlers ─────────────────────────────────────────────
+dCopyName.addEventListener('click', () => {
+  if (!selectedSymbol) return;
+  navigator.clipboard.writeText(selectedSymbol.n).then(() => {
+    dCopyName.textContent = 'Copied!';
+    setTimeout(() => { dCopyName.textContent = 'Copy Name'; }, 1500);
+  });
+});
+
+sfCodeCopy.addEventListener('click', () => {
+  if (!rawCode) return;
+  navigator.clipboard.writeText(rawCode).then(() => {
+    sfCodeCopy.textContent = 'Copied!';
+    setTimeout(() => { sfCodeCopy.textContent = 'Copy'; }, 1500);
+  });
+});
+
+// ── Search ────────────────────────────────────────────────────
+sfSearch.addEventListener('input', renderGrid);
+
+// ── Nav ───────────────────────────────────────────────────────
+document.querySelector('.nav-toggle').addEventListener('click', function() {
+  document.querySelector('.nav-links').classList.toggle('open');
+});
+document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const parent = btn.closest('.nav-dropdown');
+    const isOpen = parent.classList.contains('open');
+    document.querySelectorAll('.nav-dropdown').forEach(function(d) { d.classList.remove('open'); });
+    if (!isOpen) parent.classList.add('open');
+  });
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(function(d) { d.classList.remove('open'); });
+  }
+});
+
+// ── Init ──────────────────────────────────────────────────────
+renderGrid();
+</script>
+
+</body>
+</html>
