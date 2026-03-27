@@ -22,6 +22,20 @@
       background: rgba(7, 14, 32, 0.96) !important;
       border-bottom: 1px solid rgba(70, 110, 200, 0.12);
     }
+    /* Click-only dropdowns */
+    .nav-dropdown:hover .nav-dropdown-menu { display: none; }
+    .nav-dropdown.open .nav-dropdown-menu { display: block; }
+    /* Category labels */
+    .nav-cat {
+      font-size: .58rem; font-weight: 700; color: rgba(255,255,255,.3);
+      text-transform: uppercase; letter-spacing: .15em;
+      padding: .5rem .8rem .2rem; pointer-events: none; list-style: none;
+    }
+    .nav-soon { opacity: .4; pointer-events: none; display: flex; align-items: center; gap: .5rem; }
+    .nav-soon-badge {
+      font-size: .55rem; background: rgba(255,255,255,.1); border-radius: 3px;
+      padding: .1rem .35rem; letter-spacing: .04em; color: rgba(255,255,255,.5);
+    }
 
     /* ── Page ─────────────────────────────────────────── */
     .st-page {
@@ -340,7 +354,10 @@
     <li class="nav-dropdown">
       <a href="#" class="nav-dropdown-toggle">Tools ▾</a>
       <ul class="nav-dropdown-menu">
+        <li class="nav-cat">Common</li>
         <li><a href="/tools/speedtest">Speed Test</a></li>
+        <li class="nav-cat">iOS</li>
+        <li><a href="/tools/json-codable" class="nav-soon">JSON → Codable <span class="nav-soon-badge">Soon</span></a></li>
       </ul>
     </li>
     <li><a href="/#contact">Contact</a></li>
