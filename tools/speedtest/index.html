@@ -302,16 +302,6 @@
       cursor: not-allowed;
     }
 
-    /* ── Footer note ──────────────────────────────────── */
-    .st-note {
-      margin-top: .9rem;
-      font-size: .68rem;
-      color: rgba(100, 130, 200, 0.35);
-      position: relative;
-      z-index: 1;
-      letter-spacing: .05em;
-    }
-
     /* ── Mobile ───────────────────────────────────────── */
     @media (max-width: 600px) {
       .st-layout { flex-direction: column; }
@@ -415,14 +405,13 @@
         <div class="st-divider"></div>
         <div>
           <span class="st-label">Server</span>
-          <p class="st-server-name">Cloudflare</p>
+          <p class="st-server-name">Powered by Cloudflare</p>
         </div>
       </div>
     </div>
 
   </div><!-- /.st-layout -->
 
-  <p class="st-note">Powered by Cloudflare · No data stored</p>
 </main>
 
 <footer>
@@ -567,6 +556,7 @@ startBtn.addEventListener('click', async function() {
   btnWrap.classList.add('running');
   resetUI();
   try {
+    fetchServerInfo();
     await measurePing();
     await measureDownload();
     await measureUpload();
