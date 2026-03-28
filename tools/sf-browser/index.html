@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/_astro/future-ios.C8dQKi5L.css">
   <style>
     /* ── Base ─────────────────────────────────────────── */
+    html { font-size: 17.5px; }
     html, body { height: 100%; overflow: hidden; }
     body { display: flex; flex-direction: column; }
     footer { flex-shrink: 0; padding: 1rem 2.5rem !important; min-height: unset !important; }
@@ -1803,13 +1804,17 @@ sfCodeCopy.addEventListener('click', () => {
 sfSearch.addEventListener('input', renderGrid);
 
 // ── Nav ───────────────────────────────────────────────────────
-document.querySelector('.nav-toggle').addEventListener('click', function() {
-  document.querySelector('.nav-links').classList.toggle('open');
+var navToggleBtn = document.querySelector('.nav-toggle');
+var navLinksEl = document.querySelector('.nav-links');
+navToggleBtn.addEventListener('click', function() {
+  navLinksEl.classList.toggle('open');
+  navToggleBtn.innerHTML = navLinksEl.classList.contains('open') ? '&#10005;' : '&#9776;';
 });
 document.querySelectorAll('.nav-links a').forEach(function(a) {
   a.addEventListener('click', function() {
     if (!a.classList.contains('nav-dropdown-toggle')) {
-      document.querySelector('.nav-links').classList.remove('open');
+      navLinksEl.classList.remove('open');
+      navToggleBtn.innerHTML = '&#9776;';
     }
   });
 });

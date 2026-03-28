@@ -105,10 +105,16 @@ The good news: the platform is more productive than it's ever been. The ceiling 
     // Mobile nav toggle
     const toggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
-    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      toggle.innerHTML = navLinks.classList.contains('open') ? '&#10005;' : '&#9776;';
+    });
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        if (!link.classList.contains('nav-dropdown-toggle')) navLinks.classList.remove('open');
+        if (!link.classList.contains('nav-dropdown-toggle')) {
+          navLinks.classList.remove('open');
+          toggle.innerHTML = '&#9776;';
+        }
       });
     });
     document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {

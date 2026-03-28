@@ -45,10 +45,16 @@ I'm a lead iOS engineer with 9.5+ years specialising in <strong>fintech mobile d
     // Mobile nav toggle
     const toggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
-    toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      toggle.innerHTML = navLinks.classList.contains('open') ? '&#10005;' : '&#9776;';
+    });
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        if (!link.classList.contains('nav-dropdown-toggle')) navLinks.classList.remove('open');
+        if (!link.classList.contains('nav-dropdown-toggle')) {
+          navLinks.classList.remove('open');
+          toggle.innerHTML = '&#9776;';
+        }
       });
     });
     document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {

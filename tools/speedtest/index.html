@@ -82,6 +82,7 @@
       text-align: center;
       letter-spacing: .3em;
       text-transform: uppercase;
+      margin-top: 1.5rem;
       margin-bottom: 1.75rem;
       position: relative;
       z-index: 1;
@@ -322,9 +323,22 @@
       cursor: not-allowed;
     }
 
+    /* ── Button ───────────────────────────────────────── */
+    .st-btn-wrap {
+      width: 100%;
+      max-width: 360px;
+      align-self: center;
+      margin-top: 8px;
+    }
+
     /* ── Mobile ───────────────────────────────────────── */
     @media (max-width: 640px) {
-      .st-page { padding: 64px 3% 60px; }
+      html, body { height: auto; overflow: visible; }
+      .st-page {
+        overflow-y: auto;
+        justify-content: flex-start;
+        padding: 80px 4% 80px;
+      }
       .st-top-row { flex-direction: column; }
       .st-bottom { flex-direction: column; }
       .st-bottom-left { flex: 1; }
@@ -334,7 +348,7 @@
       .st-num { font-size: 2rem; }
       .st-label { font-size: 1.1rem; }
       .st-unit { font-size: 1rem; }
-      .st-btn-wrap { width: 100%; max-width: 280px; }
+      .st-btn-wrap { max-width: 100%; }
     }
   </style>
 </head>
@@ -412,10 +426,6 @@
             </div>
           </div>
         </div>
-        <div class="st-btn-wrap">
-          <button id="startBtn" class="st-btn">Start Test</button>
-
-        </div>
       </div>
 
       <!-- Loss + Server -->
@@ -433,6 +443,10 @@
           <p class="st-server-name">Powered by Cloudflare</p>
         </div>
       </div>
+    </div>
+
+    <div class="st-btn-wrap">
+      <button id="startBtn" class="st-btn">Start Test</button>
     </div>
 
   </div><!-- /.st-layout -->
@@ -578,6 +592,7 @@ const btnWrap  = startBtn.closest('.st-btn-wrap');
 startBtn.addEventListener('click', async function() {
   startBtn.disabled = true;
   startBtn.textContent = 'RUNNING…';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   btnWrap.classList.add('running');
   resetUI();
   try {
@@ -595,13 +610,17 @@ startBtn.addEventListener('click', async function() {
 });
 
 // ── Nav ───────────────────────────────────────────────────────
-document.querySelector('.nav-toggle').addEventListener('click', function() {
-  document.querySelector('.nav-links').classList.toggle('open');
+var navToggleBtn = document.querySelector('.nav-toggle');
+var navLinksEl = document.querySelector('.nav-links');
+navToggleBtn.addEventListener('click', function() {
+  navLinksEl.classList.toggle('open');
+  navToggleBtn.innerHTML = navLinksEl.classList.contains('open') ? '&#10005;' : '&#9776;';
 });
 document.querySelectorAll('.nav-links a').forEach(function(a) {
   a.addEventListener('click', function() {
     if (!a.classList.contains('nav-dropdown-toggle')) {
-      document.querySelector('.nav-links').classList.remove('open');
+      navLinksEl.classList.remove('open');
+      navToggleBtn.innerHTML = '&#9776;';
     }
   });
 });
