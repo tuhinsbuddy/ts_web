@@ -107,7 +107,9 @@ The good news: the platform is more productive than it's ever been. The ceiling 
     const navLinks = document.querySelector('.nav-links');
     toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
     navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => navLinks.classList.remove('open'));
+      link.addEventListener('click', () => {
+        if (!link.classList.contains('nav-dropdown-toggle')) navLinks.classList.remove('open');
+      });
     });
     document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
       btn.addEventListener('click', e => {

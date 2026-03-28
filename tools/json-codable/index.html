@@ -667,7 +667,9 @@ document.querySelector('.nav-toggle').addEventListener('click', function() {
 });
 document.querySelectorAll('.nav-links a').forEach(function(a) {
   a.addEventListener('click', function() {
-    document.querySelector('.nav-links').classList.remove('open');
+    if (!a.classList.contains('nav-dropdown-toggle')) {
+      document.querySelector('.nav-links').classList.remove('open');
+    }
   });
 });
 document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {

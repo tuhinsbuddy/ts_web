@@ -47,7 +47,9 @@ I'm a lead iOS engineer with 9.5+ years specialising in <strong>fintech mobile d
     const navLinks = document.querySelector('.nav-links');
     toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
     navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => navLinks.classList.remove('open'));
+      link.addEventListener('click', () => {
+        if (!link.classList.contains('nav-dropdown-toggle')) navLinks.classList.remove('open');
+      });
     });
     document.querySelectorAll('.nav-dropdown-toggle').forEach(btn => {
       btn.addEventListener('click', e => {

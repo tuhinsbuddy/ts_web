@@ -323,16 +323,18 @@
     }
 
     /* ── Mobile ───────────────────────────────────────── */
-    @media (max-width: 600px) {
-      .st-layout { flex-direction: column; }
-      .st-num.lg { font-size: 2.8rem; }
-      .st-num { font-size: 2.4rem; }
-      .st-page { padding: 64px 4% 60px; }
-    }
-
-    @media (max-width: 400px) {
+    @media (max-width: 640px) {
+      .st-page { padding: 64px 3% 60px; }
+      .st-top-row { flex-direction: column; }
+      .st-bottom { flex-direction: column; }
+      .st-bottom-left { flex: 1; }
       .st-row { gap: 8px; }
-      .st-layout { gap: 8px; }
+      .st-layout { gap: 8px; max-width: 100%; }
+      .st-num.lg { font-size: 2.6rem; }
+      .st-num { font-size: 2rem; }
+      .st-label { font-size: 1.1rem; }
+      .st-unit { font-size: 1rem; }
+      .st-btn-wrap { width: 100%; max-width: 280px; }
     }
   </style>
 </head>
@@ -598,7 +600,9 @@ document.querySelector('.nav-toggle').addEventListener('click', function() {
 });
 document.querySelectorAll('.nav-links a').forEach(function(a) {
   a.addEventListener('click', function() {
-    document.querySelector('.nav-links').classList.remove('open');
+    if (!a.classList.contains('nav-dropdown-toggle')) {
+      document.querySelector('.nav-links').classList.remove('open');
+    }
   });
 });
 document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {
