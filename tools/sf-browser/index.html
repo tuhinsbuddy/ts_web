@@ -279,13 +279,37 @@
     .cm  { color: rgba(160,190,240,.45); font-style: italic; }
     .dot { color: rgba(160,190,240,.5); }
 
+    /* ── Back button (mobile only) ────────────────────── */
+    .sf-back-btn {
+      display: none;
+      align-items: center; gap: .5rem;
+      width: 100%; padding: .85rem 1.25rem;
+      background: transparent; border: none;
+      border-bottom: 1px solid rgba(70,110,200,.15);
+      color: #7aaae8; font-size: .85rem; font-weight: 600;
+      cursor: pointer; text-align: left; flex-shrink: 0;
+      letter-spacing: .03em;
+    }
+    .sf-back-btn svg { flex-shrink: 0; }
+
     /* ── Mobile ───────────────────────────────────────── */
     @media (max-width: 768px) {
-      .sf-detail { display: none; }
       .sf-header { padding: 1rem; }
       .sf-controls { padding: .6rem 1rem; }
       .sf-grid-wrap { padding: .75rem; }
       .sf-badges { display: none; }
+      .sf-detail {
+        display: none;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        z-index: 200;
+        background: #070e20;
+        overflow-y: auto;
+        flex-direction: column;
+      }
+      .sf-detail.mobile-open { display: flex; }
+      .sf-back-btn { display: flex; }
     }
   </style>
 </head>
@@ -312,6 +336,7 @@
         <li class="nav-cat">iOS</li>
         <li><a href="/tools/json-codable">JSON → Codable</a></li>
         <li><a href="/tools/sf-browser">SF Symbols Browser</a></li>
+        <li><a href="/tools/xcode-cleaner">Xcode Cleaner</a></li>
       </ul>
     </li>
     <li><a href="/#contact">Contact</a></li>
@@ -362,6 +387,10 @@
 
     <!-- Detail Panel -->
     <div class="sf-detail" id="sfDetail">
+      <button class="sf-back-btn" id="sfBackBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to Symbols
+      </button>
       <div class="sf-detail-empty" id="sfDetailEmpty">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
           <rect x="3" y="3" width="7" height="7" rx="1"/>
@@ -1681,6 +1710,12 @@ function selectSymbol(sym) {
   sfDetailEmpty.style.display = 'none';
   sfDetailContent.style.display = 'flex';
 
+  // Mobile: show detail as full-screen overlay
+  if (window.innerWidth <= 768) {
+    document.getElementById('sfDetail').classList.add('mobile-open');
+    window.scrollTo(0, 0);
+  }
+
   // Hero
   const heroGlyph = getGlyph(sym.n);
   if (heroGlyph) {
@@ -1782,6 +1817,11 @@ function updateCode() {
   rawCode = activeTab === 'swiftui' ? genSwiftUI(selectedSymbol) : genUIKit(selectedSymbol);
   sfCodeOut.innerHTML = highlight(rawCode);
 }
+
+// ── Mobile back button ────────────────────────────────────────
+document.getElementById('sfBackBtn').addEventListener('click', () => {
+  document.getElementById('sfDetail').classList.remove('mobile-open');
+});
 
 // ── Copy handlers ─────────────────────────────────────────────
 dCopyName.addEventListener('click', () => {
